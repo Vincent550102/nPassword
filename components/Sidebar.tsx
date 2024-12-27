@@ -4,6 +4,12 @@ import Modal from "@/components/Modal";
 import { useDomain } from "@/context/DomainContext";
 import Image from "next/image";
 
+interface Account {
+  username: string;
+  password?: string;
+  ntlmHash?: string;
+}
+
 export default function Sidebar() {
   const {
     selectedDomain,
@@ -15,10 +21,15 @@ export default function Sidebar() {
   } = useDomain();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [newAccount, setNewAccount] = useState({ username: "", password: "" });
+  const [newAccount, setNewAccount] = useState({
+    username: "",
+    password: "",
+    ntlmHash: "",
+  });
   const [editAccount, setEditAccount] = useState({
     username: "",
     password: "",
+    ntlmHash: "",
   });
   const [error, setError] = useState("");
   const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
@@ -37,11 +48,14 @@ export default function Sidebar() {
   }, [newAccount.username, selectedDomain]);
 
   const handleAddAccount = () => {
-    if (newAccount.username.trim() === "" || newAccount.password.trim() === "")
+    if (
+      newAccount.username.trim() === "" ||
+      (newAccount.password.trim() === "" && newAccount.ntlmHash.trim() === "")
+    )
       return;
     if (error) return;
     addAccount(newAccount);
-    setNewAccount({ username: "", password: "" });
+    setNewAccount({ username: "", password: "", ntlmHash: "" });
     setIsModalOpen(false);
   };
 
@@ -57,14 +71,18 @@ export default function Sidebar() {
   };
 
   const handleEditAccount = (account: Account) => {
-    setEditAccount(account);
+    setEditAccount({
+      username: account.username || "",
+      password: account.password || "",
+      ntlmHash: account.ntlmHash || "",
+    });
     setIsEditModalOpen(true);
   };
 
   const handleUpdateAccount = () => {
     if (
       editAccount.username.trim() === "" ||
-      editAccount.password.trim() === ""
+      (editAccount.password.trim() === "" && editAccount.ntlmHash.trim() === "")
     )
       return;
     updateAccount(editAccount.username, editAccount);
@@ -156,6 +174,15 @@ export default function Sidebar() {
               placeholder="Password"
               className="border p-2 mb-4 w-full text-black"
             />
+            <input
+              type="text"
+              value={newAccount.ntlmHash}
+              onChange={(e) =>
+                setNewAccount({ ...newAccount, ntlmHash: e.target.value })
+              }
+              placeholder="NTLM Hash"
+              className="border p-2 mb-4 w-full text-black"
+            />
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <button
               onClick={handleAddAccount}
@@ -186,6 +213,15 @@ export default function Sidebar() {
                 setEditAccount({ ...editAccount, password: e.target.value })
               }
               placeholder="Password"
+              className="border p-2 mb-4 w-full text-black"
+            />
+            <input
+              type="text"
+              value={editAccount.ntlmHash}
+              onChange={(e) =>
+                setEditAccount({ ...editAccount, ntlmHash: e.target.value })
+              }
+              placeholder="NTLM Hash"
               className="border p-2 mb-4 w-full text-black"
             />
             <button

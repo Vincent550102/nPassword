@@ -4,7 +4,8 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 
 interface Account {
   username: string;
-  password: string;
+  password?: string;
+  ntlmHash?: string;
 }
 
 interface Domain {
