@@ -90,7 +90,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="min-w-64 w-auto bg-gray-100 p-4">
+    <div className="min-w-64 w-auto bg-gray-100 p-4 max-h-[90vh] overflow-y-auto">
       <h2 className="text-xl mb-4">Accounts</h2>
       <ul>
         {selectedDomain?.accounts.map((account) => (
