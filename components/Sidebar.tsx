@@ -1,34 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
-import Modal from "./Modal";
+import Modal from "@/components/Modal";
+import { useDomain } from "@/context/DomainContext";
 import Image from "next/image";
 
-interface Account {
-  username: string;
-  password: string;
-}
-
-interface Domain {
-  name: string;
-  accounts: Account[];
-}
-
-export default function Sidebar({
-  selectedDomain,
-  onAddAccount,
-  onSelectAccount,
-  onDeleteAccount,
-  selectedAccount,
-}: {
-  selectedDomain: Domain | null;
-  onAddAccount: (account: Account) => void;
-  onSelectAccount: (account: Account) => void;
-  onDeleteAccount: (username: string) => void;
-  selectedAccount: Account | null;
-}) {
+export default function Sidebar() {
+  const {
+    selectedDomain,
+    selectedAccount,
+    setSelectedAccount,
+    addAccount,
+    deleteAccount,
+  } = useDomain();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAccount, setNewAccount] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
+  const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (selectedDomain) {
@@ -47,9 +34,20 @@ export default function Sidebar({
     if (newAccount.username.trim() === "" || newAccount.password.trim() === "")
       return;
     if (error) return;
-    onAddAccount(newAccount);
+    addAccount(newAccount);
     setNewAccount({ username: "", password: "" });
     setIsModalOpen(false);
+  };
+
+  const handleDeleteAccount = (username: string) => {
+    setAccountToDelete(username);
+  };
+
+  const confirmDeleteAccount = () => {
+    if (accountToDelete) {
+      deleteAccount(accountToDelete);
+      setAccountToDelete(null);
+    }
   };
 
   return (
@@ -59,28 +57,35 @@ export default function Sidebar({
         {selectedDomain?.accounts.map((account) => (
           <li
             key={account.username}
-            className={`mb-2 flex items-center ${selectedAccount?.username === account.username ? "bg-gray-300" : ""}`}
+            onClick={() => setSelectedAccount(account)}
+            className={`mb-2 flex items-center justify-between p-2 rounded cursor-pointer transition-shadow ${
+              selectedAccount?.username === account.username
+                ? "bg-gray-300"
+                : "bg-white"
+            } hover:shadow-md`}
           >
-            <Image
-              src={
-                account.username.endsWith("$") ? "/computer.svg" : "/user.svg"
-              }
-              alt="Account icon"
-              width={16}
-              height={16}
-              className="mr-2"
-            />
+            <div className="flex items-center">
+              <Image
+                src={
+                  account.username.endsWith("$") ? "/computer.svg" : "/user.svg"
+                }
+                alt="Account icon"
+                width={16}
+                height={16}
+              />
+              <span className="text-gray-500">{selectedDomain.name}/</span>
+              <span className="text-black text-lg ml-1">
+                {account.username}
+              </span>
+            </div>
             <button
-              onClick={() => onSelectAccount(account)}
-              className="text-blue-500 underline"
-            >
-              {account.username}
-            </button>
-            <button
-              onClick={() => onDeleteAccount(account.username)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteAccount(account.username);
+              }}
               className="text-red-500 ml-2"
             >
-              Delete
+              &times;
             </button>
           </li>
         ))}
@@ -123,6 +128,30 @@ export default function Sidebar({
             >
               Add Account
             </button>
+          </div>
+        </Modal>
+      )}
+      {accountToDelete && (
+        <Modal onClose={() => setAccountToDelete(null)}>
+          <div className="p-4">
+            <h2 className="text-xl mb-4">Confirm Delete</h2>
+            <p>
+              Are you sure you want to delete the account "{accountToDelete}"?
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setAccountToDelete(null)}
+                className="bg-gray-500 text-white p-2 mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteAccount}
+                className="bg-red-500 text-white p-2"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </Modal>
       )}

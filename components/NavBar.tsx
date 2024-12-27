@@ -1,40 +1,17 @@
 "use client";
 import { useState } from "react";
-import Modal from "./Modal";
-import useLocalStorage from "@/hooks/useLocalStorage";
+import Modal from "@/components/Modal";
+import { useDomain } from "@/context/DomainContext";
 
-interface Domain {
-  name: string;
-  accounts: Account[];
-}
-
-interface Account {
-  username: string;
-  password: string;
-}
-
-interface Data {
-  domains: Domain[];
-}
-
-const initialData: Data = { domains: [] };
-
-export default function NavBar({
-  onSelectDomain,
-  selectedDomain,
-}: {
-  onSelectDomain: (domain: Domain | null) => void;
-  selectedDomain: Domain | null;
-}) {
-  const [data, setData] = useLocalStorage<Data>(
-    "passwordManagerData",
-    initialData,
-  );
+export default function NavBar() {
+  const { data, selectedDomain, setSelectedDomain, addDomain, deleteDomain } =
+    useDomain();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDomain, setNewDomain] = useState("");
   const [error, setError] = useState("");
+  const [domainToDelete, setDomainToDelete] = useState<string | null>(null);
 
-  const addDomain = () => {
+  const handleAddDomain = () => {
     if (newDomain.trim() === "") return;
     const domainExists = data.domains.some(
       (domain) => domain.name === newDomain,
@@ -44,27 +21,22 @@ export default function NavBar({
       return;
     }
     const newDomainObject = { name: newDomain, accounts: [] };
-    setData((prevData) => ({
-      domains: [...prevData.domains, newDomainObject],
-    }));
+    addDomain(newDomainObject);
     setNewDomain("");
     setIsModalOpen(false);
-    onSelectDomain(newDomainObject);
+    setSelectedDomain(newDomainObject);
   };
 
-  const deleteDomain = () => {
-    if (
-      selectedDomain &&
-      confirm(
-        `Are you sure you want to delete the domain "${selectedDomain.name}"?`,
-      )
-    ) {
-      setData((prevData) => ({
-        domains: prevData.domains.filter(
-          (domain) => domain.name !== selectedDomain.name,
-        ),
-      }));
-      onSelectDomain(null);
+  const handleDeleteDomain = () => {
+    if (selectedDomain) {
+      setDomainToDelete(selectedDomain.name);
+    }
+  };
+
+  const confirmDeleteDomain = () => {
+    if (domainToDelete) {
+      deleteDomain(domainToDelete);
+      setDomainToDelete(null);
     }
   };
 
@@ -78,9 +50,9 @@ export default function NavBar({
               (domain) => domain.name === e.target.value,
             );
             if (selectedDomain) {
-              onSelectDomain(selectedDomain);
+              setSelectedDomain(selectedDomain);
             } else {
-              onSelectDomain(null);
+              setSelectedDomain(null);
             }
           }}
           className="bg-gray-700 p-2 rounded"
@@ -115,7 +87,7 @@ export default function NavBar({
             />
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <button
-              onClick={addDomain}
+              onClick={handleAddDomain}
               className="bg-blue-500 text-white p-2 w-full"
             >
               Add Domain
@@ -124,9 +96,36 @@ export default function NavBar({
         </Modal>
       )}
       {selectedDomain && (
-        <button onClick={deleteDomain} className="ml-4 bg-red-500 p-2 rounded">
+        <button
+          onClick={handleDeleteDomain}
+          className="ml-4 bg-red-500 p-2 rounded"
+        >
           Delete Domain
         </button>
+      )}
+      {domainToDelete && (
+        <Modal onClose={() => setDomainToDelete(null)}>
+          <div className="p-4">
+            <h2 className="text-xl mb-4">Confirm Delete</h2>
+            <p>
+              Are you sure you want to delete the domain "{domainToDelete}"?
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setDomainToDelete(null)}
+                className="bg-gray-500 text-white p-2 mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteDomain}
+                className="bg-red-500 text-white p-2"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </nav>
   );
