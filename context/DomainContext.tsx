@@ -30,6 +30,8 @@ interface DomainContextType {
   addAccount: (account: Account) => void;
   deleteAccount: (username: string) => void;
   updateAccount: (username: string, updatedAccount: Account) => void;
+  exportDomainData: (domainName: string) => void;
+  loadDomainData: (newDomain: Domain) => void;
 }
 
 const DomainContext = createContext<DomainContextType | undefined>(undefined);
@@ -132,6 +134,37 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedAccount(updatedAccount);
   };
 
+  const exportDomainData = (domainName: string) => {
+    const domain = data.domains.find((d) => d.name === domainName);
+    if (domain) {
+      const dataStr = JSON.stringify(domain, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${domainName}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  const loadDomainData = (newDomain: Domain) => {
+    const domainExists = data.domains.some(
+      (domain) => domain.name === newDomain.name,
+    );
+    if (domainExists) {
+      alert("Domain already exists.");
+      return;
+    }
+    setData((prevData) => {
+      const updatedData = {
+        domains: [...prevData.domains, newDomain],
+      };
+      setSelectedDomain(newDomain); // 立即設置選中的域
+      return updatedData;
+    });
+  };
+
   return (
     <DomainContext.Provider
       value={{
@@ -145,6 +178,8 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
         addAccount,
         deleteAccount,
         updateAccount,
+        exportDomainData,
+        loadDomainData,
       }}
     >
       {children}

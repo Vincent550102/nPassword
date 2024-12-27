@@ -4,8 +4,15 @@ import Modal from "@/components/Modal";
 import { useDomain } from "@/context/DomainContext";
 
 export default function NavBar() {
-  const { data, selectedDomain, setSelectedDomain, addDomain, deleteDomain } =
-    useDomain();
+  const {
+    data,
+    selectedDomain,
+    setSelectedDomain,
+    addDomain,
+    deleteDomain,
+    exportDomainData,
+    loadDomainData,
+  } = useDomain();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDomain, setNewDomain] = useState("");
   const [error, setError] = useState("");
@@ -37,6 +44,20 @@ export default function NavBar() {
     if (domainToDelete) {
       deleteDomain(domainToDelete);
       setDomainToDelete(null);
+    }
+  };
+
+  const handleLoadData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target?.result as string;
+        const newDomain = JSON.parse(text);
+        loadDomainData(newDomain);
+        event.target.value = "";
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -73,7 +94,32 @@ export default function NavBar() {
         >
           +
         </button>
+        <label className="ml-2 bg-yellow-500 text-white p-2 rounded cursor-pointer">
+          Load
+          <input
+            type="file"
+            accept="application/json"
+            onChange={handleLoadData}
+            className="hidden"
+          />
+        </label>
       </div>
+      {selectedDomain && (
+        <div className="flex items-center">
+          <button
+            onClick={() => exportDomainData(selectedDomain.name)}
+            className="bg-green-500 text-white p-2 rounded mr-2"
+          >
+            Export
+          </button>
+          <button
+            onClick={handleDeleteDomain}
+            className="bg-red-500 p-2 rounded"
+          >
+            Delete Domain
+          </button>
+        </div>
+      )}
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="p-4">
@@ -94,14 +140,6 @@ export default function NavBar() {
             </button>
           </div>
         </Modal>
-      )}
-      {selectedDomain && (
-        <button
-          onClick={handleDeleteDomain}
-          className="ml-4 bg-red-500 p-2 rounded"
-        >
-          Delete Domain
-        </button>
       )}
       {domainToDelete && (
         <Modal onClose={() => setDomainToDelete(null)}>
