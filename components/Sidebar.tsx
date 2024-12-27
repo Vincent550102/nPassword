@@ -136,7 +136,10 @@ export default function Sidebar() {
           <div className="p-4">
             <h2 className="text-xl mb-4">Confirm Delete</h2>
             <p>
-              Are you sure you want to delete the account "{accountToDelete}"?
+              <p>
+                Are you sure you want to delete the account &quot;
+                {accountToDelete}&quot;?
+              </p>
             </p>
             <div className="flex justify-end mt-4">
               <button

@@ -108,7 +108,8 @@ export default function NavBar() {
           <div className="p-4">
             <h2 className="text-xl mb-4">Confirm Delete</h2>
             <p>
-              Are you sure you want to delete the domain "{domainToDelete}"?
+              Are you sure you want to delete the domain &quot;{domainToDelete}
+              &quot;?
             </p>
             <div className="flex justify-end mt-4">
               <button
