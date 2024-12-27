@@ -14,7 +14,7 @@ const commands: Command[] = [
   },
   {
     name: "impacket-smbexec",
-    template: "impacket-psexec {username}:{password}@{domain}",
+    template: "impacket-smbexec {username}:{password}@{domain}",
   },
 ];
 

@@ -11,9 +11,15 @@ export default function Sidebar() {
     setSelectedAccount,
     addAccount,
     deleteAccount,
+    updateAccount,
   } = useDomain();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newAccount, setNewAccount] = useState({ username: "", password: "" });
+  const [editAccount, setEditAccount] = useState({
+    username: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
 
@@ -50,8 +56,23 @@ export default function Sidebar() {
     }
   };
 
+  const handleEditAccount = (account: Account) => {
+    setEditAccount(account);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateAccount = () => {
+    if (
+      editAccount.username.trim() === "" ||
+      editAccount.password.trim() === ""
+    )
+      return;
+    updateAccount(editAccount.username, editAccount);
+    setIsEditModalOpen(false);
+  };
+
   return (
-    <div className="w-64 bg-gray-100 p-4">
+    <div className="min-w-64 w-auto bg-gray-100 p-4">
       <h2 className="text-xl mb-4">Accounts</h2>
       <ul>
         {selectedDomain?.accounts.map((account) => (
@@ -70,23 +91,37 @@ export default function Sidebar() {
                   account.username.endsWith("$") ? "/computer.svg" : "/user.svg"
                 }
                 alt="Account icon"
-                width={16}
-                height={16}
+                className="mr-4"
+                width={32}
+                height={32}
               />
-              <span className="text-gray-500">{selectedDomain.name}/</span>
-              <span className="text-black text-lg ml-1">
-                {account.username}
-              </span>
+              <div className="flex flex-col">
+                <span className="text-gray-500">{selectedDomain.name}/</span>
+                <span className="text-black text-lg ml-2 truncate max-w-xs">
+                  {account.username}
+                </span>
+              </div>
             </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteAccount(account.username);
-              }}
-              className="text-red-500 ml-2"
-            >
-              &times;
-            </button>
+            <div className="flex items-center">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEditAccount(account);
+                }}
+                className="text-blue-500 ml-2"
+              >
+                &#9998;
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteAccount(account.username);
+                }}
+                className="text-red-500 ml-2"
+              >
+                &times;
+              </button>
+            </div>
           </li>
         ))}
       </ul>
@@ -131,15 +166,44 @@ export default function Sidebar() {
           </div>
         </Modal>
       )}
+      {isEditModalOpen && (
+        <Modal onClose={() => setIsEditModalOpen(false)}>
+          <div className="p-4">
+            <h2 className="text-xl mb-4">Edit Account</h2>
+            <input
+              type="text"
+              value={editAccount.username}
+              onChange={(e) =>
+                setEditAccount({ ...editAccount, username: e.target.value })
+              }
+              placeholder="Username"
+              className="border p-2 mb-4 w-full text-black"
+            />
+            <input
+              type="password"
+              value={editAccount.password}
+              onChange={(e) =>
+                setEditAccount({ ...editAccount, password: e.target.value })
+              }
+              placeholder="Password"
+              className="border p-2 mb-4 w-full text-black"
+            />
+            <button
+              onClick={handleUpdateAccount}
+              className="bg-blue-500 text-white p-2 w-full"
+            >
+              Update Account
+            </button>
+          </div>
+        </Modal>
+      )}
       {accountToDelete && (
         <Modal onClose={() => setAccountToDelete(null)}>
           <div className="p-4">
             <h2 className="text-xl mb-4">Confirm Delete</h2>
             <p>
-              <p>
-                Are you sure you want to delete the account &quot;
-                {accountToDelete}&quot;?
-              </p>
+              Are you sure you want to delete the account &quot;
+              {accountToDelete}&quot;?
             </p>
             <div className="flex justify-end mt-4">
               <button

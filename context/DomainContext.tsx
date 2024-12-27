@@ -28,6 +28,7 @@ interface DomainContextType {
   deleteDomain: (domainName: string) => void;
   addAccount: (account: Account) => void;
   deleteAccount: (username: string) => void;
+  updateAccount: (username: string, updatedAccount: Account) => void;
 }
 
 const DomainContext = createContext<DomainContextType | undefined>(undefined);
@@ -104,6 +105,32 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedAccount(null);
   };
 
+  const updateAccount = (username: string, updatedAccount: Account) => {
+    if (!selectedDomain) return;
+    setData((prevData) => ({
+      domains: prevData.domains.map((domain) =>
+        domain.name === selectedDomain.name
+          ? {
+              ...domain,
+              accounts: domain.accounts.map((account) =>
+                account.username === username ? updatedAccount : account,
+              ),
+            }
+          : domain,
+      ),
+    }));
+    setSelectedDomain((prevDomain) => {
+      if (!prevDomain) return null;
+      return {
+        ...prevDomain,
+        accounts: prevDomain.accounts.map((account) =>
+          account.username === username ? updatedAccount : account,
+        ),
+      };
+    });
+    setSelectedAccount(updatedAccount);
+  };
+
   return (
     <DomainContext.Provider
       value={{
@@ -116,6 +143,7 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
         deleteDomain,
         addAccount,
         deleteAccount,
+        updateAccount,
       }}
     >
       {children}

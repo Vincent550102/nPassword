@@ -37,7 +37,7 @@ export default function DomainManager() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 p-4">
+      <div className="flex-1 ml-8">
         {selectedAccount && (
           <>
             <h2 className="text-xl mb-2">
