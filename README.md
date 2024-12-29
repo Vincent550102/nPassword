@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## TODO
+
+- [ ] Support for local account
+- [ ] fulfill more commands template
+- [ ] Fix UI/UX issues
+
 ## Getting Started
 
 First, run the development server:
