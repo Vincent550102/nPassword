@@ -16,7 +16,7 @@ export default function DomainManager() {
     setSelectedDomain,
   } = useDomain();
   const [targetHost, setTargetHost] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [, setIsModalOpen] = useState(false);
   const [newDomain, setNewDomain] = useState("");
   const [error, setError] = useState("");
 
