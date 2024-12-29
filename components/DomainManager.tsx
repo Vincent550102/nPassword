@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import { useDomain } from "@/context/DomainContext";
 import Sidebar from "./Sidebar";
 import commands from "@/config/commands";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function DomainManager() {
   const { selectedDomain, selectedAccount } = useDomain();
@@ -10,7 +12,10 @@ export default function DomainManager() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert("Copied to clipboard!");
+    toast.success("Copied to clipboard!", {
+      position: "bottom-center",
+      autoClose: 2000,
+    });
   };
 
   const renderCommands = () => {
@@ -40,7 +45,7 @@ export default function DomainManager() {
           <code className="bg-gray-200 p-2 rounded">{commandText}</code>
           <button
             onClick={() => copyToClipboard(commandText)}
-            className="bg-blue-500 text-white p-2 ml-2"
+            className="bg-blue-500 text-white p-2 ml-2 rounded hover:bg-blue-600 transition duration-300"
           >
             Copy
           </button>
@@ -105,6 +110,7 @@ export default function DomainManager() {
           </>
         )}
       </div>
+      <ToastContainer />
     </div>
   );
 }
