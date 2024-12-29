@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <Head>
         <title>nPassword</title>
-        <link rel="icon" href="/user.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
