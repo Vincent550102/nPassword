@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "nPassword",
-  description: "Password management application",
+  description: "A Password Manager for Windows Active Directory.",
 };
 
 export default function RootLayout({
