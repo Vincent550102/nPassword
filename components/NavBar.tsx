@@ -30,8 +30,8 @@ export default function NavBar() {
     const newDomainObject = { name: newDomain, accounts: [] };
     addDomain(newDomainObject);
     setNewDomain("");
-    setIsModalOpen(false);
     setSelectedDomain(newDomainObject);
+    setIsModalOpen(false);
   };
 
   const handleDeleteDomain = () => {

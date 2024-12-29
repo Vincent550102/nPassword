@@ -1,14 +1,46 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useDomain } from "@/context/DomainContext";
 import Sidebar from "./Sidebar";
+import Modal from "./Modal";
 import commands from "@/config/commands";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function DomainManager() {
-  const { selectedDomain, selectedAccount } = useDomain();
+  const {
+    data,
+    selectedDomain,
+    selectedAccount,
+    addDomain,
+    setSelectedDomain,
+  } = useDomain();
   const [targetHost, setTargetHost] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newDomain, setNewDomain] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (data.domains.length === 0) {
+      setIsModalOpen(true);
+    }
+  }, [data.domains]);
+
+  const handleAddDomain = () => {
+    if (newDomain.trim() === "") return;
+    const domainExists = data.domains.some(
+      (domain) => domain.name === newDomain,
+    );
+    if (domainExists) {
+      setError("Domain already exists.");
+      return;
+    }
+    const newDomainObject = { name: newDomain, accounts: [] };
+    addDomain(newDomainObject);
+    setNewDomain("");
+    setSelectedDomain(newDomainObject);
+    setIsModalOpen(false);
+  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -79,6 +111,52 @@ export default function DomainManager() {
       </div>
     );
   };
+
+  if (!selectedDomain) {
+    return (
+      <Modal onClose={() => setIsModalOpen(false)}>
+        <div className="p-4">
+          <div className="mb-4">
+            <h2 className="text-xl mb-4">Select Existing Domain</h2>
+            <select
+              onChange={(e) => {
+                const selectedDomain = data.domains.find(
+                  (domain) => domain.name === e.target.value,
+                );
+                if (selectedDomain) {
+                  setSelectedDomain(selectedDomain);
+                  setIsModalOpen(false);
+                }
+              }}
+              className="border p-2 w-full text-black"
+            >
+              <option value="">Select Domain</option>
+              {data.domains.map((domain) => (
+                <option key={domain.name} value={domain.name}>
+                  {domain.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <h2 className="text-xl mb-4">Or Add New Domain</h2>
+          <input
+            type="text"
+            value={newDomain}
+            onChange={(e) => setNewDomain(e.target.value)}
+            placeholder="New domain"
+            className="border p-2 mb-4 w-full text-black"
+          />
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <button
+            onClick={handleAddDomain}
+            className="bg-blue-500 text-white p-2 w-full"
+          >
+            Add Domain
+          </button>
+        </div>
+      </Modal>
+    );
+  }
 
   return (
     <div className="flex">
