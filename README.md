@@ -1,6 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 > This website is a purely front-end application, and all data is stored locally on the client’s device using local storage, then deploy on GitHub Pages. 
+
 > It is intended solely for research and educational purposes. The author assumes no legal or related responsibility for any consequences arising from the use of this tool.
 
 
