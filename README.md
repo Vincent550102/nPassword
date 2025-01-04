@@ -6,7 +6,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Demo
 
-https://github.com/user-attachments/assets/5113e1df-0c7b-4540-912b-d7aa791ec6d1
+https://github.com/user-attachments/assets/611f2531-ba5c-4160-91a9-d7540355d7a7
 
 
 ## Feature
