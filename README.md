@@ -1,5 +1,21 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+> This website is a purely front-end application, and all data is stored locally on the client’s device using local storage, then deploy on GitHub Pages. 
+> It is intended solely for research and educational purposes. The author assumes no legal or related responsibility for any consequences arising from the use of this tool.
+
+
+## Feature
+
+- Domain-Specific Account Management:
+    - Accounts are stored and managed separately for each domain, ensuring clear organization and accessibility.
+- One-Click Export/Import of Domains:
+    - Easily export or import domain-specific data with a single click, streamlining the process for backup or sharing.
+- Automatic Command Template Integration:
+    - Automatically applies saved account information to relevant command templates for tools like impacket and evil-winrm, reducing manual effort and errors.
+- Pure Front-End Design:
+    - This website operates entirely on the client side. No credentials, NTLM hashes, or sensitive data are processed or transmitted to external servers.
+
+
 ## TODO
 
 - [ ] Support for local account
