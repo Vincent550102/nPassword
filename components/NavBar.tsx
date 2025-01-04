@@ -63,63 +63,79 @@ export default function NavBar() {
 
   return (
     <nav className="bg-gray-800 p-4 text-white flex justify-between items-center fixed top-0 left-0 right-0 z-10">
-      <div className="relative">
-        <select
-          value={selectedDomain ? selectedDomain.name : ""}
-          onChange={(e) => {
-            const selectedDomain = data.domains.find(
-              (domain) => domain.name === e.target.value,
-            );
-            if (selectedDomain) {
-              setSelectedDomain(selectedDomain);
-            } else {
-              setSelectedDomain(null);
-            }
-          }}
-          className="bg-gray-700 p-2 rounded"
+      <div className="flex items-center space-x-2">
+        <div className="text-xl font-bold">nPassword</div>
+        <div className="text-gray-400">.</div>
+        <a
+          href="https://github.com/vincent550102/npassword"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-400 hover:text-gray-300 transition-colors"
         >
-          <option value="">Select Domain</option>
-          {data.domains.map((domain) => (
-            <option key={domain.name} value={domain.name}>
-              {domain.name}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={() => {
-            setIsModalOpen(true);
-            setError("");
-          }}
-          className="ml-2 bg-blue-500 p-2 rounded"
-        >
-          +
-        </button>
-        <label className="ml-2 bg-yellow-500 text-white p-2 rounded cursor-pointer">
-          Load
-          <input
-            type="file"
-            accept="application/json"
-            onChange={handleLoadData}
-            className="hidden"
-          />
-        </label>
+          GitHub
+        </a>
       </div>
       {selectedDomain && (
-        <div className="flex items-center">
-          <button
-            onClick={() => exportDomainData(selectedDomain.name)}
-            className="bg-green-500 text-white p-2 rounded mr-2"
+        <div className="flex items-center space-x-2">
+          <select
+            value={selectedDomain ? selectedDomain.name : ""}
+            onChange={(e) => {
+              const selectedDomain = data.domains.find(
+                (domain) => domain.name === e.target.value,
+              );
+              if (selectedDomain) {
+                setSelectedDomain(selectedDomain);
+              } else {
+                setSelectedDomain(null);
+              }
+            }}
+            className="bg-gray-700 p-2 rounded"
           >
-            Export
-          </button>
+            <option value="">Select Domain</option>
+            {data.domains.map((domain) => (
+              <option key={domain.name} value={domain.name}>
+                {domain.name}
+              </option>
+            ))}
+          </select>
           <button
-            onClick={handleDeleteDomain}
-            className="bg-red-500 p-2 rounded"
+            onClick={() => {
+              setIsModalOpen(true);
+              setError("");
+            }}
+            className="ml-2 bg-blue-500 p-2 rounded"
           >
-            Delete Domain
+            +
           </button>
+          <label className="ml-2 bg-yellow-500 text-white p-2 rounded cursor-pointer">
+            Load
+            <input
+              type="file"
+              accept="application/json"
+              onChange={handleLoadData}
+              className="hidden"
+            />
+          </label>
         </div>
       )}
+      <div className="flex items-center space-x-2">
+        {selectedDomain && (
+          <>
+            <button
+              onClick={() => exportDomainData(selectedDomain.name)}
+              className="bg-green-500 text-white p-2 rounded"
+            >
+              Export
+            </button>
+            <button
+              onClick={handleDeleteDomain}
+              className="bg-red-500 p-2 rounded"
+            >
+              Delete Domain
+            </button>
+          </>
+        )}
+      </div>
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="p-4">

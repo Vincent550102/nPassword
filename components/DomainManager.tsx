@@ -13,6 +13,7 @@ export default function DomainManager() {
     selectedDomain,
     selectedAccount,
     addDomain,
+    loadDomainData,
     setSelectedDomain,
   } = useDomain();
   const [targetHost, setTargetHost] = useState("");
@@ -48,6 +49,19 @@ export default function DomainManager() {
       position: "bottom-center",
       autoClose: 2000,
     });
+  };
+  const handleLoadData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target?.result as string;
+        const newDomain = JSON.parse(text);
+        loadDomainData(newDomain);
+        event.target.value = "";
+      };
+      reader.readAsText(file);
+    }
   };
 
   const renderCommands = () => {
@@ -138,7 +152,17 @@ export default function DomainManager() {
               ))}
             </select>
           </div>
-          <h2 className="text-xl mb-4">Or Add New Domain</h2>
+          <h2 className="text-xl mb-4">Or Load Domain</h2>
+          <label className="mb-4 bg-yellow-500 text-white p-2 rounded cursor-pointer">
+            Load
+            <input
+              type="file"
+              accept="application/json"
+              onChange={handleLoadData}
+              className="hidden"
+            />
+          </label>
+          <h2 className="text-xl mb-4 mt-4">Or Add New Domain</h2>
           <input
             type="text"
             value={newDomain}
@@ -146,6 +170,7 @@ export default function DomainManager() {
             placeholder="New domain"
             className="border p-2 mb-4 w-full text-black"
           />
+
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             onClick={handleAddDomain}
