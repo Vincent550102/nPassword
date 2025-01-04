@@ -71,20 +71,19 @@ export default function DomainManager() {
       let commandText = command.template;
       if (command.authType === "password" && selectedAccount.password) {
         commandText = commandText
-          .replace("{username}", selectedAccount.username)
-          .replace("{password}", selectedAccount.password)
-          .replace("{domain}", selectedDomain.name)
-          .replace("{targetHost}", targetHost);
+          .replace("{username}", selectedAccount.username.replace(/'/g, "\\'"))
+          .replace("{password}", selectedAccount.password.replace(/'/g, "\\'"))
+          .replace("{domain}", selectedDomain.name.replace(/'/g, "\\'"))
+          .replace("{targetHost}", targetHost.replace(/'/g, "\\'"));
       } else if (command.authType === "ntlmHash" && selectedAccount.ntlmHash) {
         commandText = commandText
-          .replace("{username}", selectedAccount.username)
-          .replace("{ntlmHash}", selectedAccount.ntlmHash)
-          .replace("{domain}", selectedDomain.name)
-          .replace("{targetHost}", targetHost);
+          .replace("{username}", selectedAccount.username.replace(/'/g, "\\'"))
+          .replace("{ntlmHash}", selectedAccount.ntlmHash.replace(/'/g, "\\'"))
+          .replace("{domain}", selectedDomain.name.replace(/'/g, "\\'"))
+          .replace("{targetHost}", targetHost.replace(/'/g, "\\'"));
       } else {
         return null; // Skip this command if the required auth type is not available
       }
-
       return (
         <li key={`${command.name}-${index}`} className="mb-4">
           <h3 className="text-lg font-semibold mb-2">{command.name}</h3>
