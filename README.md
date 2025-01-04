@@ -24,6 +24,7 @@ https://github.com/user-attachments/assets/611f2531-ba5c-4160-91a9-d7540355d7a7
 ## TODO
 
 - [ ] Support for local account
+- [ ] Add a feature to allow adding notes to accounts.
 - [ ] fulfill more commands template
 - [ ] Fix UI/UX issues
 
