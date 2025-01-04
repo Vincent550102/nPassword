@@ -24,6 +24,12 @@ const commands: Command[] = [
     authType: "password",
   },
   {
+    name: "impacket-smbclient",
+    template:
+      "impacket-smbclient '{domain}'/'{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
     name: "Evil-WinRM",
     template: "evil-winrm -u '{username}' -p '{password}' -i '{targetHost}'",
     authType: "password",
@@ -44,6 +50,12 @@ const commands: Command[] = [
     name: "impacket-smbexec (NTLM)",
     template:
       "impacket-smbexec '{domain}'/'{username}'@'{targetHost}' -hashes '{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    name: "impacket-smbclient (NTLM)",
+    template:
+      "impacket-smbclient '{domain}'/'{username}'@'{targetHost}' -hashes '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
