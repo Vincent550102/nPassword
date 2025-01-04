@@ -4,6 +4,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 > It is intended solely for research and educational purposes. The author assumes no legal or related responsibility for any consequences arising from the use of this tool.
 
+## Demo
+
+https://github.com/user-attachments/assets/5113e1df-0c7b-4540-912b-d7aa791ec6d1
+
 
 ## Feature
 
