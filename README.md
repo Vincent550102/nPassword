@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# nPassword
+
+This is a Password Manager for Windows Active Directory.
 
 > This website is a purely front-end application, and all data is stored locally on the client’s device using local storage, then deploy on GitHub Pages. 
 
