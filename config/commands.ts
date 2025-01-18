@@ -31,7 +31,7 @@ const commands: Command[] = [
   },
   {
     name: "xfreerdp",
-    tempate:
+    template:
       "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "password",
   },
@@ -71,7 +71,7 @@ const commands: Command[] = [
   },
   {
     name: "xfreerdp (NTLM)",
-    tempate:
+    template:
       "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "ntlmHash",
   },
