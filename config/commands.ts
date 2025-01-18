@@ -73,7 +73,7 @@ const commands: Command[] = [
     name: "xfreerdp (NTLM)",
     tempate:
       "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
-    authType: "password",
+    authType: "ntlmHash",
   },
 ];
 
