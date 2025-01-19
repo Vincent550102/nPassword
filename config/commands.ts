@@ -30,6 +30,12 @@ const commands: Command[] = [
     authType: "password",
   },
   {
+    name: "xfreerdp",
+    template:
+      "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
+    authType: "password",
+  },
+  {
     name: "Evil-WinRM",
     template: "evil-winrm -u '{username}' -p '{password}' -i '{targetHost}'",
     authType: "password",
@@ -61,6 +67,12 @@ const commands: Command[] = [
   {
     name: "Evil-WinRM (NTLM)",
     template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
+    authType: "ntlmHash",
+  },
+  {
+    name: "xfreerdp (NTLM)",
+    template:
+      "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "ntlmHash",
   },
 ];
