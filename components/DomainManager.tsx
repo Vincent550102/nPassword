@@ -43,13 +43,28 @@ export default function DomainManager() {
     setIsModalOpen(false);
   };
 
+  const unsecureCopyToClipboard = (text: string) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+  }
+
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    if(navigator.clipboard || window.isSecureContext) {
+      navigator.clipboard.writeText(text);
+    } else {
+      unsecureCopyToClipboard(text);
+    }
     toast.success("Copied to clipboard!", {
       position: "bottom-center",
       autoClose: 2000,
     });
   };
+
   const handleLoadData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
