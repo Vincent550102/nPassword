@@ -207,7 +207,7 @@ export default function Sidebar() {
               className="border p-2 mb-4 w-full text-black"
             />
             <input
-              type="password"
+              type="text"
               value={editAccount.password}
               onChange={(e) =>
                 setEditAccount({ ...editAccount, password: e.target.value })
