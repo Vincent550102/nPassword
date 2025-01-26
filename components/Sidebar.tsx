@@ -97,11 +97,11 @@ export default function Sidebar() {
           <li
             key={account.username}
             onClick={() => setSelectedAccount(account)}
-            className={`mb-2 flex items-center justify-between p-2 rounded cursor-pointer transition-shadow ${
+            className={`mb-2 flex items-center justify-between p-2 rounded cursor-pointer transition-shadow transform hover:shadow-md active:scale-95 ${
               selectedAccount?.username === account.username
                 ? "bg-gray-300"
                 : "bg-white"
-            } hover:shadow-md`}
+            }`}
           >
             <div className="flex items-center">
               <Image
