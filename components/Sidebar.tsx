@@ -22,8 +22,6 @@ export default function Sidebar() {
     addAccount,
     deleteAccount,
     updateAccount,
-    addTagToAccount,
-    removeTagFromAccount,
   } = useDomain();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -44,9 +42,11 @@ export default function Sidebar() {
     host: "",
   });
   const [newTag, setNewTag] = useState("");
+  const [editTag, setEditTag] = useState("");
   const [error, setError] = useState("");
   const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
+  const [isEditTagInputVisible, setIsEditTagInputVisible] = useState(false);
 
   useEffect(() => {
     if (selectedDomain) {
@@ -113,10 +113,9 @@ export default function Sidebar() {
     setIsEditModalOpen(false);
   };
 
-  const handleAddTag = () => {
+  const handleAddNewTag = () => {
     if (newTag.trim() === "") return;
-    addTagToAccount(editAccount.username, newTag);
-    setEditAccount((prev) => ({
+    setNewAccount((prev) => ({
       ...prev,
       tags: [...prev.tags, newTag],
     }));
@@ -124,17 +123,40 @@ export default function Sidebar() {
     setIsTagInputVisible(false);
   };
 
-  const handleRemoveTag = (tag: string) => {
-    removeTagFromAccount(editAccount.username, tag);
+  const handleRemoveNewTag = (tag: string) => {
+    setNewAccount((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((t) => t !== tag),
+    }));
+  };
+
+  const handleAddEditTag = () => {
+    if (editTag.trim() === "") return;
+    setEditAccount((prev) => ({
+      ...prev,
+      tags: [...prev.tags, editTag],
+    }));
+    setEditTag("");
+    setIsEditTagInputVisible(false);
+  };
+
+  const handleRemoveEditTag = (tag: string) => {
     setEditAccount((prev) => ({
       ...prev,
       tags: prev.tags.filter((t) => t !== tag),
     }));
   };
 
-  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleTagInputKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    type: "new" | "edit",
+  ) => {
     if (e.key === "Enter") {
-      handleAddTag();
+      if (type === "new") {
+        handleAddNewTag();
+      } else {
+        handleAddEditTag();
+      }
     }
   };
 
@@ -291,7 +313,7 @@ export default function Sidebar() {
                   <span
                     key={tag}
                     className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded cursor-pointer"
-                    onClick={() => handleRemoveTag(tag)}
+                    onClick={() => handleRemoveNewTag(tag)}
                   >
                     {tag} &times;
                   </span>
@@ -301,8 +323,7 @@ export default function Sidebar() {
                     type="text"
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
-                    onBlur={handleAddTag}
-                    onKeyDown={handleTagInputKeyDown}
+                    onKeyDown={(e) => handleTagInputKeyDown(e, "new")}
                     placeholder="New tag"
                     className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
                     autoFocus
@@ -380,25 +401,24 @@ export default function Sidebar() {
                   <span
                     key={tag}
                     className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded cursor-pointer"
-                    onClick={() => handleRemoveTag(tag)}
+                    onClick={() => handleRemoveEditTag(tag)}
                   >
                     {tag} &times;
                   </span>
                 ))}
-                {isTagInputVisible ? (
+                {isEditTagInputVisible ? (
                   <input
                     type="text"
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    onBlur={handleAddTag}
-                    onKeyDown={handleTagInputKeyDown}
+                    value={editTag}
+                    onChange={(e) => setEditTag(e.target.value)}
+                    onKeyDown={(e) => handleTagInputKeyDown(e, "edit")}
                     placeholder="New tag"
                     className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
                     autoFocus
                   />
                 ) : (
                   <button
-                    onClick={() => setIsTagInputVisible(true)}
+                    onClick={() => setIsEditTagInputVisible(true)}
                     className="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
                   >
                     + Add Tag
