@@ -40,7 +40,7 @@ export default function Modal({
     >
       <div
         ref={modalRef}
-        className={`bg-white p-4 rounded shadow-lg relative transform transition-transform duration-300 ${isVisible ? "scale-100" : "scale-90"}`}
+        className={`bg-white p-4 rounded shadow-lg relative transform transition-transform duration-300 ${isVisible ? "scale-100" : "scale-90"} w-1/3`}
       >
         <button
           onClick={handleClose}

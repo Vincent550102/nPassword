@@ -7,6 +7,8 @@ interface Account {
   password?: string;
   ntlmHash?: string;
   tags?: string[];
+  type: "local" | "domain";
+  host?: string;
 }
 
 interface Domain {

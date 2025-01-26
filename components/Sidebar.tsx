@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Modal from "@/components/Modal";
+import AccountTypeToggle from "@/components/AccountTypeToggle";
 import { useDomain } from "@/context/DomainContext";
 import Image from "next/image";
 
@@ -9,6 +10,8 @@ interface Account {
   password?: string;
   ntlmHash?: string;
   tags?: string[];
+  type: "local" | "domain";
+  host?: string;
 }
 
 export default function Sidebar() {
@@ -29,12 +32,16 @@ export default function Sidebar() {
     password: "",
     ntlmHash: "",
     tags: [] as string[],
+    type: "domain" as "local" | "domain",
+    host: "",
   });
   const [editAccount, setEditAccount] = useState({
     username: "",
     password: "",
     ntlmHash: "",
     tags: [] as string[],
+    type: "domain" as "local" | "domain",
+    host: "",
   });
   const [newTag, setNewTag] = useState("");
   const [error, setError] = useState("");
@@ -62,7 +69,14 @@ export default function Sidebar() {
       return;
     if (error) return;
     addAccount(newAccount);
-    setNewAccount({ username: "", password: "", ntlmHash: "", tags: [] });
+    setNewAccount({
+      username: "",
+      password: "",
+      ntlmHash: "",
+      tags: [],
+      type: "domain",
+      host: "",
+    });
     setIsModalOpen(false);
   };
 
@@ -83,6 +97,8 @@ export default function Sidebar() {
       password: account.password || "",
       ntlmHash: account.ntlmHash || "",
       tags: account.tags || [],
+      type: account.type,
+      host: account.host || "",
     });
     setIsEditModalOpen(true);
   };
@@ -122,6 +138,23 @@ export default function Sidebar() {
     }
   };
 
+  const handleAccountTypeChange = useCallback((type: "local" | "domain") => {
+    setNewAccount((prev) => ({
+      ...prev,
+      type,
+    }));
+  }, []);
+
+  const handleEditAccountTypeChange = useCallback(
+    (type: "local" | "domain") => {
+      setEditAccount((prev) => ({
+        ...prev,
+        type,
+      }));
+    },
+    [],
+  );
+
   return (
     <div className="min-w-64 w-auto bg-gray-100 p-4 h-4/6 overflow-y-auto">
       <h2 className="text-xl mb-4">Accounts</h2>
@@ -150,7 +183,11 @@ export default function Sidebar() {
                   height={32}
                 />
                 <div className="flex flex-col">
-                  <span className="text-gray-500">{selectedDomain.name}/</span>
+                  <span className="text-gray-500">
+                    {account.type === "local"
+                      ? account.host + "$"
+                      : selectedDomain.name + "/"}
+                  </span>
                   <span className="text-black text-lg ml-2 truncate max-w-xs">
                     {account.username}
                   </span>
@@ -205,6 +242,21 @@ export default function Sidebar() {
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="p-4">
             <h2 className="text-xl mb-4">Add New Account</h2>
+            <AccountTypeToggle
+              onChange={handleAccountTypeChange}
+              initialType="domain"
+            />
+            {newAccount.type === "local" && (
+              <input
+                type="text"
+                value={newAccount.host}
+                onChange={(e) =>
+                  setNewAccount({ ...newAccount, host: e.target.value })
+                }
+                placeholder="Host"
+                className="border p-2 mb-4 w-full text-black"
+              />
+            )}
             <input
               type="text"
               value={newAccount.username}
@@ -279,6 +331,21 @@ export default function Sidebar() {
         <Modal onClose={() => setIsEditModalOpen(false)}>
           <div className="p-4">
             <h2 className="text-xl mb-4">Edit Account</h2>
+            <AccountTypeToggle
+              onChange={handleEditAccountTypeChange}
+              initialType={editAccount.type}
+            />
+            {editAccount.type === "local" && (
+              <input
+                type="text"
+                value={editAccount.host}
+                onChange={(e) =>
+                  setEditAccount({ ...editAccount, host: e.target.value })
+                }
+                placeholder="Host"
+                className="border p-2 mb-4 w-full text-black"
+              />
+            )}
             <input
               type="text"
               value={editAccount.username}

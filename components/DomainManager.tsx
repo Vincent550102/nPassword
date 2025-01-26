@@ -4,7 +4,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { useDomain } from "@/context/DomainContext";
 import Sidebar from "./Sidebar";
 import Modal from "./Modal";
-import commands from "@/config/commands";
+import domainCommands from "@/config/commands.domain";
+import localCommands from "@/config/commands.local";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function DomainManager() {
@@ -82,7 +83,10 @@ export default function DomainManager() {
   const renderCommands = () => {
     if (!selectedAccount || !selectedDomain) return null;
 
-    return commands.map((command, index) => {
+    const applicableCommands =
+      selectedAccount.type === "local" ? localCommands : domainCommands;
+
+    return applicableCommands.map((command, index) => {
       let commandText = command.template;
       if (command.authType === "password" && selectedAccount.password) {
         commandText = commandText
@@ -121,6 +125,19 @@ export default function DomainManager() {
       <div className="bg-white p-4 rounded shadow-md mb-8">
         <h3 className="text-lg font-semibold mb-2">Account Information</h3>
         <p>
+          <strong>Type:</strong> {selectedAccount.type} account
+        </p>
+        {selectedAccount.type === "domain" && (
+          <p>
+            <strong>Domain:</strong> {selectedDomain.name}
+          </p>
+        )}
+        {selectedAccount.type === "local" && (
+          <p>
+            <strong>Host:</strong> {selectedAccount.host}
+          </p>
+        )}
+        <p>
           <strong>Username:</strong> {selectedAccount.username}
         </p>
         {selectedAccount.password && (
@@ -132,24 +149,6 @@ export default function DomainManager() {
           <p>
             <strong>NTLM Hash:</strong> {selectedAccount.ntlmHash}
           </p>
-        )}
-        <p>
-          <strong>Domain:</strong> {selectedDomain.name}
-        </p>
-        {selectedAccount.tags && (
-          <div className="mt-2">
-            <strong>Tags:</strong>
-            <div className="flex flex-wrap mt-1">
-              {selectedAccount.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
         )}
       </div>
     );

@@ -4,7 +4,7 @@ interface Command {
   authType: "password" | "ntlmHash";
 }
 
-const commands: Command[] = [
+const domainCommands: Command[] = [
   {
     name: "impacket-wmiexec",
     template:
@@ -77,4 +77,4 @@ const commands: Command[] = [
   },
 ];
 
-export default commands;
+export default domainCommands;
