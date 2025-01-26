@@ -30,6 +30,12 @@ const domainCommands: Command[] = [
     authType: "password",
   },
   {
+    name: "impacket-mssqlclient",
+    template:
+      "impacket-mssqlclient '{domain}'/'{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
     name: "xfreerdp",
     template:
       "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
@@ -62,6 +68,12 @@ const domainCommands: Command[] = [
     name: "impacket-smbclient (NTLM)",
     template:
       "impacket-smbclient '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    name: "impacket-mssqlclient (NTLM)",
+    template:
+      "impacket-mssqlclient '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {

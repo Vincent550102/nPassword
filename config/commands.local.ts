@@ -26,6 +26,11 @@ const localCommands: Command[] = [
     authType: "password",
   },
   {
+    name: "local-impacket-mssqlclient",
+    template: "impacket-mssqlclient '{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
     name: "local-xfreerdp",
     template:
       "xfreerdp /u:'{username}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
@@ -58,6 +63,12 @@ const localCommands: Command[] = [
     name: "local-impacket-smbclient (NTLM)",
     template:
       "impacket-smbclient '{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    name: "local-impacket-mssqlclient (NTLM)",
+    template:
+      "impacket-mssqlclient '{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
