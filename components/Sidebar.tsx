@@ -8,6 +8,7 @@ interface Account {
   username: string;
   password?: string;
   ntlmHash?: string;
+  tags?: string[];
 }
 
 export default function Sidebar() {
@@ -18,6 +19,8 @@ export default function Sidebar() {
     addAccount,
     deleteAccount,
     updateAccount,
+    addTagToAccount,
+    removeTagFromAccount,
   } = useDomain();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -25,14 +28,18 @@ export default function Sidebar() {
     username: "",
     password: "",
     ntlmHash: "",
+    tags: [] as string[],
   });
   const [editAccount, setEditAccount] = useState({
     username: "",
     password: "",
     ntlmHash: "",
+    tags: [] as string[],
   });
+  const [newTag, setNewTag] = useState("");
   const [error, setError] = useState("");
   const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
+  const [isTagInputVisible, setIsTagInputVisible] = useState(false);
 
   useEffect(() => {
     if (selectedDomain) {
@@ -55,7 +62,7 @@ export default function Sidebar() {
       return;
     if (error) return;
     addAccount(newAccount);
-    setNewAccount({ username: "", password: "", ntlmHash: "" });
+    setNewAccount({ username: "", password: "", ntlmHash: "", tags: [] });
     setIsModalOpen(false);
   };
 
@@ -75,6 +82,7 @@ export default function Sidebar() {
       username: account.username || "",
       password: account.password || "",
       ntlmHash: account.ntlmHash || "",
+      tags: account.tags || [],
     });
     setIsEditModalOpen(true);
   };
@@ -89,6 +97,31 @@ export default function Sidebar() {
     setIsEditModalOpen(false);
   };
 
+  const handleAddTag = () => {
+    if (newTag.trim() === "") return;
+    addTagToAccount(editAccount.username, newTag);
+    setEditAccount((prev) => ({
+      ...prev,
+      tags: [...prev.tags, newTag],
+    }));
+    setNewTag("");
+    setIsTagInputVisible(false);
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    removeTagFromAccount(editAccount.username, tag);
+    setEditAccount((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((t) => t !== tag),
+    }));
+  };
+
+  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleAddTag();
+    }
+  };
+
   return (
     <div className="min-w-64 w-auto bg-gray-100 p-4 h-4/6 overflow-y-auto">
       <h2 className="text-xl mb-4">Accounts</h2>
@@ -97,49 +130,65 @@ export default function Sidebar() {
           <li
             key={account.username}
             onClick={() => setSelectedAccount(account)}
-            className={`mb-2 flex items-center justify-between p-2 rounded cursor-pointer transition-shadow transform hover:shadow-md active:scale-95 ${
+            className={`mb-2 flex flex-col p-2 rounded cursor-pointer transition-shadow transform hover:shadow-md active:scale-95 ${
               selectedAccount?.username === account.username
                 ? "bg-gray-300"
                 : "bg-white"
             }`}
           >
-            <div className="flex items-center">
-              <Image
-                src={
-                  account.username.endsWith("$") ? "/computer.svg" : "/user.svg"
-                }
-                alt="Account icon"
-                className="mr-4"
-                width={32}
-                height={32}
-              />
-              <div className="flex flex-col">
-                <span className="text-gray-500">{selectedDomain.name}/</span>
-                <span className="text-black text-lg ml-2 truncate max-w-xs">
-                  {account.username}
-                </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Image
+                  src={
+                    account.username.endsWith("$")
+                      ? "/computer.svg"
+                      : "/user.svg"
+                  }
+                  alt="Account icon"
+                  className="mr-4"
+                  width={32}
+                  height={32}
+                />
+                <div className="flex flex-col">
+                  <span className="text-gray-500">{selectedDomain.name}/</span>
+                  <span className="text-black text-lg ml-2 truncate max-w-xs">
+                    {account.username}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditAccount(account);
+                  }}
+                  className="text-blue-500 ml-2"
+                >
+                  &#9998;
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteAccount(account.username);
+                  }}
+                  className="text-red-500 ml-2"
+                >
+                  &times;
+                </button>
               </div>
             </div>
-            <div className="flex items-center">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEditAccount(account);
-                }}
-                className="text-blue-500 ml-2"
-              >
-                &#9998;
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteAccount(account.username);
-                }}
-                className="text-red-500 ml-2"
-              >
-                &times;
-              </button>
-            </div>
+            {account.tags && (
+              <div className="flex flex-wrap mt-1">
+                {account.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </li>
         ))}
       </ul>
@@ -183,6 +232,39 @@ export default function Sidebar() {
               placeholder="NTLM Hash"
               className="border p-2 mb-4 w-full text-black"
             />
+            <div className="mb-4">
+              <h3 className="text-lg mb-2">Tags</h3>
+              <div className="flex flex-wrap mb-2">
+                {newAccount.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded cursor-pointer"
+                    onClick={() => handleRemoveTag(tag)}
+                  >
+                    {tag} &times;
+                  </span>
+                ))}
+                {isTagInputVisible ? (
+                  <input
+                    type="text"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onBlur={handleAddTag}
+                    onKeyDown={handleTagInputKeyDown}
+                    placeholder="New tag"
+                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                    autoFocus
+                  />
+                ) : (
+                  <button
+                    onClick={() => setIsTagInputVisible(true)}
+                    className="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                  >
+                    + Add Tag
+                  </button>
+                )}
+              </div>
+            </div>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <button
               onClick={handleAddAccount}
@@ -224,6 +306,39 @@ export default function Sidebar() {
               placeholder="NTLM Hash"
               className="border p-2 mb-4 w-full text-black"
             />
+            <div className="mb-4">
+              <h3 className="text-lg mb-2">Tags</h3>
+              <div className="flex flex-wrap mb-2">
+                {editAccount.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded cursor-pointer"
+                    onClick={() => handleRemoveTag(tag)}
+                  >
+                    {tag} &times;
+                  </span>
+                ))}
+                {isTagInputVisible ? (
+                  <input
+                    type="text"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onBlur={handleAddTag}
+                    onKeyDown={handleTagInputKeyDown}
+                    placeholder="New tag"
+                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                    autoFocus
+                  />
+                ) : (
+                  <button
+                    onClick={() => setIsTagInputVisible(true)}
+                    className="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                  >
+                    + Add Tag
+                  </button>
+                )}
+              </div>
+            </div>
             <button
               onClick={handleUpdateAccount}
               className="bg-blue-500 text-white p-2 w-full"

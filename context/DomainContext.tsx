@@ -6,6 +6,7 @@ interface Account {
   username: string;
   password?: string;
   ntlmHash?: string;
+  tags?: string[];
 }
 
 interface Domain {
@@ -30,6 +31,8 @@ interface DomainContextType {
   addAccount: (account: Account) => void;
   deleteAccount: (username: string) => void;
   updateAccount: (username: string, updatedAccount: Account) => void;
+  addTagToAccount: (username: string, tag: string) => void;
+  removeTagFromAccount: (username: string, tag: string) => void;
   exportDomainData: (domainName: string) => void;
   loadDomainData: (newDomain: Domain) => void;
 }
@@ -134,6 +137,48 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedAccount(updatedAccount);
   };
 
+  const addTagToAccount = (username: string, tag: string) => {
+    if (!selectedDomain) return;
+    setData((prevData) => ({
+      domains: prevData.domains.map((domain) =>
+        domain.name === selectedDomain.name
+          ? {
+              ...domain,
+              accounts: domain.accounts.map((account) =>
+                account.username === username
+                  ? {
+                      ...account,
+                      tags: account.tags ? [...account.tags, tag] : [tag],
+                    }
+                  : account,
+              ),
+            }
+          : domain,
+      ),
+    }));
+  };
+
+  const removeTagFromAccount = (username: string, tag: string) => {
+    if (!selectedDomain) return;
+    setData((prevData) => ({
+      domains: prevData.domains.map((domain) =>
+        domain.name === selectedDomain.name
+          ? {
+              ...domain,
+              accounts: domain.accounts.map((account) =>
+                account.username === username
+                  ? {
+                      ...account,
+                      tags: account.tags?.filter((t) => t !== tag),
+                    }
+                  : account,
+              ),
+            }
+          : domain,
+      ),
+    }));
+  };
+
   const exportDomainData = (domainName: string) => {
     const domain = data.domains.find((d) => d.name === domainName);
     if (domain) {
@@ -180,6 +225,8 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
         updateAccount,
         exportDomainData,
         loadDomainData,
+        addTagToAccount,
+        removeTagFromAccount,
       }}
     >
       {children}

@@ -51,10 +51,10 @@ export default function DomainManager() {
     textArea.select();
     document.execCommand("copy");
     document.body.removeChild(textArea);
-  }
+  };
 
   const copyToClipboard = (text: string) => {
-    if(navigator.clipboard || window.isSecureContext) {
+    if (navigator.clipboard || window.isSecureContext) {
       navigator.clipboard.writeText(text);
     } else {
       unsecureCopyToClipboard(text);
@@ -136,6 +136,21 @@ export default function DomainManager() {
         <p>
           <strong>Domain:</strong> {selectedDomain.name}
         </p>
+        {selectedAccount.tags && (
+          <div className="mt-2">
+            <strong>Tags:</strong>
+            <div className="flex flex-wrap mt-1">
+              {selectedAccount.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     );
   };
