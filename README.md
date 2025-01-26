@@ -2,7 +2,7 @@
 
 This is a Password Manager for Windows Active Directory.
 
-> This website is a purely front-end application, and all data is stored locally on the client’s device using local storage, then deploy on GitHub Pages. 
+> This website is a purely front-end application, and all data is stored locally on the client’s device using local storage, then deploy on GitHub Pages.
 
 > It is intended solely for research and educational purposes. The author assumes no legal or related responsibility for any consequences arising from the use of this tool.
 
@@ -25,10 +25,11 @@ https://github.com/user-attachments/assets/611f2531-ba5c-4160-91a9-d7540355d7a7
 
 ## TODO
 
-- [ ] Support for local account
-- [ ] Add a feature to allow adding notes to accounts.
-- [ ] fulfill more commands template
-- [ ] Fix UI/UX issues
+- [x] Support for local account
+- [x] Add a feature to allow adding notes to accounts.
+- [x] fulfill more commands template
+- [x] Fix UI/UX issues
+- [ ] Add a feature to allow users to customize the command template.
 
 ## Getting Started
 
