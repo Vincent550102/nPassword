@@ -65,14 +65,14 @@ const domainCommands: Command[] = [
     authType: "ntlmHash",
   },
   {
-    name: "Evil-WinRM (NTLM)",
-    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
-    authType: "ntlmHash",
-  },
-  {
     name: "xfreerdp (NTLM)",
     template:
       "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
+    authType: "ntlmHash",
+  },
+  {
+    name: "Evil-WinRM (NTLM)",
+    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
     authType: "ntlmHash",
   },
 ];

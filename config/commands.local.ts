@@ -61,14 +61,14 @@ const localCommands: Command[] = [
     authType: "ntlmHash",
   },
   {
-    name: "local-Evil-WinRM (NTLM)",
-    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
-    authType: "ntlmHash",
-  },
-  {
     name: "local-xfreerdp (NTLM)",
     template:
       "xfreerdp /u:'{username}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
+    authType: "ntlmHash",
+  },
+  {
+    name: "local-Evil-WinRM (NTLM)",
+    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
     authType: "ntlmHash",
   },
 ];
