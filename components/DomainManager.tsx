@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { useDomain } from "@/context/DomainContext";
+import { useDomain, Domain } from "@/context/DomainContext";
 import Sidebar from "./Sidebar";
 import Modal from "./Modal";
 import domainCommands from "@/config/commands.domain";
@@ -8,6 +8,7 @@ import localCommands from "@/config/commands.local";
 import "react-toastify/dist/ReactToastify.css";
 import { FaSearch, FaRegCopy } from "react-icons/fa";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 export default function DomainManager() {
   const {
@@ -23,6 +24,20 @@ export default function DomainManager() {
   const [newDomain, setNewDomain] = useState("");
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [storedDomainName, setStoredDomainName] = useLocalStorage<
+    string | null
+  >("selectedDomain", null);
+
+  useEffect(() => {
+    if (storedDomainName) {
+      const storedDomain = data.domains.find(
+        (domain) => domain.name === storedDomainName,
+      );
+      if (storedDomain) {
+        setSelectedDomain(storedDomain);
+      }
+    }
+  }, [data.domains, setSelectedDomain, storedDomainName]);
 
   useEffect(() => {
     if (data.domains.length === 0) {
@@ -39,11 +54,20 @@ export default function DomainManager() {
       setError("Domain already exists.");
       return;
     }
-    const newDomainObject = { name: newDomain, accounts: [] };
+    const newDomainObject: Domain = { name: newDomain, accounts: [] };
     addDomain(newDomainObject);
     setNewDomain("");
     setSelectedDomain(newDomainObject);
     setIsModalOpen(false);
+  };
+
+  const handleSetSelectedDomain = (domain: Domain | null) => {
+    setSelectedDomain(domain);
+    if (domain) {
+      setStoredDomainName(domain.name);
+    } else {
+      setStoredDomainName(null);
+    }
   };
 
   const unsecureCopyToClipboard = (text: string) => {
@@ -189,7 +213,7 @@ export default function DomainManager() {
                   (domain) => domain.name === e.target.value,
                 );
                 if (selectedDomain) {
-                  setSelectedDomain(selectedDomain);
+                  handleSetSelectedDomain(selectedDomain);
                   setIsModalOpen(false);
                 }
               }}

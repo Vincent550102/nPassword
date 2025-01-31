@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import useLocalStorage from "@/hooks/useLocalStorage";
 
-interface Account {
+export interface Account {
   username: string;
   password?: string;
   ntlmHash?: string;
@@ -11,11 +11,10 @@ interface Account {
   host?: string;
 }
 
-interface Domain {
+export interface Domain {
   name: string;
   accounts: Account[];
 }
-
 interface Data {
   domains: Domain[];
 }

@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import Modal from "@/components/Modal";
-import { useDomain } from "@/context/DomainContext";
+import { useDomain, Domain } from "@/context/DomainContext";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 export default function NavBar() {
   const {
@@ -17,6 +18,10 @@ export default function NavBar() {
   const [newDomain, setNewDomain] = useState("");
   const [error, setError] = useState("");
   const [domainToDelete, setDomainToDelete] = useState<string | null>(null);
+  const [, setStoredDomainName] = useLocalStorage<string | null>(
+    "selectedDomain",
+    null,
+  );
 
   const handleAddDomain = () => {
     if (newDomain.trim() === "") return;
@@ -27,7 +32,7 @@ export default function NavBar() {
       setError("Domain already exists.");
       return;
     }
-    const newDomainObject = { name: newDomain, accounts: [] };
+    const newDomainObject: Domain = { name: newDomain, accounts: [] };
     addDomain(newDomainObject);
     setNewDomain("");
     setSelectedDomain(newDomainObject);
@@ -63,6 +68,7 @@ export default function NavBar() {
 
   const handleTitleClick = () => {
     setSelectedDomain(null);
+    setStoredDomainName(null);
   };
 
   return (
@@ -94,8 +100,10 @@ export default function NavBar() {
               );
               if (selectedDomain) {
                 setSelectedDomain(selectedDomain);
+                setStoredDomainName(selectedDomain.name);
               } else {
                 setSelectedDomain(null);
+                setStoredDomainName(null);
               }
             }}
             className="bg-gray-700 p-2 rounded"
