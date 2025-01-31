@@ -80,14 +80,24 @@ export default function DomainManager() {
     }
   };
 
+  // When targetHost is not set and the type is local, set targetHost as the local host
+
+
   const renderCommands = () => {
     if (!selectedAccount || !selectedDomain) return null;
+
+    useEffect(() => {
+      if (!targetHost && selectedAccount?.type === "local") {
+        setTargetHost(selectedAccount.host);
+      }
+    }, [selectedAccount]);
 
     const applicableCommands =
       selectedAccount.type === "local" ? localCommands : domainCommands;
 
     return applicableCommands.map((command, index) => {
       let commandText = command.template;
+
       if (command.authType === "password" && selectedAccount.password) {
         commandText = commandText
           .replace("{username}", selectedAccount.username.replace(/'/g, "\\'"))

@@ -26,6 +26,11 @@ const localCommands: Command[] = [
     authType: "password",
   },
   {
+    name: "local-impacket-mssqlclient",
+    template: "impacket-mssqlclient '{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
     name: "local-xfreerdp",
     template:
       "xfreerdp /u:'{username}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
@@ -61,14 +66,20 @@ const localCommands: Command[] = [
     authType: "ntlmHash",
   },
   {
-    name: "local-Evil-WinRM (NTLM)",
-    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
+    name: "local-impacket-mssqlclient (NTLM)",
+    template:
+      "impacket-mssqlclient '{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     name: "local-xfreerdp (NTLM)",
     template:
       "xfreerdp /u:'{username}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
+    authType: "ntlmHash",
+  },
+  {
+    name: "local-Evil-WinRM (NTLM)",
+    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
     authType: "ntlmHash",
   },
 ];

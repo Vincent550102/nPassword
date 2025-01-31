@@ -30,6 +30,12 @@ const domainCommands: Command[] = [
     authType: "password",
   },
   {
+    name: "impacket-mssqlclient",
+    template:
+      "impacket-mssqlclient '{domain}'/'{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
     name: "xfreerdp",
     template:
       "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
@@ -65,14 +71,20 @@ const domainCommands: Command[] = [
     authType: "ntlmHash",
   },
   {
-    name: "Evil-WinRM (NTLM)",
-    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
+    name: "impacket-mssqlclient (NTLM)",
+    template:
+      "impacket-mssqlclient '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     name: "xfreerdp (NTLM)",
     template:
       "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
+    authType: "ntlmHash",
+  },
+  {
+    name: "Evil-WinRM (NTLM)",
+    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
     authType: "ntlmHash",
   },
 ];
