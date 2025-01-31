@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import domainCommands from "@/config/commands.domain";
 import localCommands from "@/config/commands.local";
 import "react-toastify/dist/ReactToastify.css";
+import { FaRegCopy } from "react-icons/fa";
 
 export default function DomainManager() {
   const {
@@ -121,14 +122,16 @@ export default function DomainManager() {
           return null; // Skip this command if the required auth type is not available
         }
         return (
-          <li key={`${index}`} className="mb-4">
-            <button
+          <li key={`${index}`} className="mb-4 flex items-center">
+            <div
+              className="p-2 rounded border border-gray-300 hover:bg-gray-100 cursor-pointer mr-2"
               onClick={() => copyToClipboard(commandText)}
-              className="bg-blue-500 text-white p-2 mr-2 rounded hover:bg-blue-600 transition duration-300"
             >
-              Copy
-            </button>
-            <code className="bg-gray-200 p-2 rounded">{commandText}</code>
+              <FaRegCopy />
+            </div>
+            <pre className="m-0">
+              <code className="bg-gray-200 p-2 rounded">{commandText}</code>
+            </pre>
           </li>
         );
       });
