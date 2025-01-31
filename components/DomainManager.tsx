@@ -129,8 +129,10 @@ export default function DomainManager() {
             >
               <FaRegCopy />
             </div>
-            <pre className="m-0">
-              <code className="bg-gray-200 p-2 rounded">{commandText}</code>
+            <pre className="m-0 w-full max-w-full overflow-x-auto">
+              <code className="bg-gray-200 p-2 rounded block w-full">
+                {commandText}
+              </code>
             </pre>
           </li>
         );
