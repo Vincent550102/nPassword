@@ -7,6 +7,8 @@ import domainCommands from "@/config/commands.domain";
 import localCommands from "@/config/commands.local";
 import "react-toastify/dist/ReactToastify.css";
 import { FaSearch, FaRegCopy } from "react-icons/fa";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function DomainManager() {
   const {
@@ -129,11 +131,12 @@ export default function DomainManager() {
             >
               <FaRegCopy />
             </div>
-            <pre className="m-0 inline-block min-w-[200px] max-w-full overflow-x-auto">
-              <code className="bg-gray-200 p-2 rounded block">
-                {commandText}
-              </code>
-            </pre>
+            <SyntaxHighlighter
+              language="bash"
+              className="m-0 inline-block min-w-[200px] max-w-full overflow-x-auto"
+            >
+              {commandText}
+            </SyntaxHighlighter>
           </li>
         );
       });
