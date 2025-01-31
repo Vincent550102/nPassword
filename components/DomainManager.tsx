@@ -129,8 +129,8 @@ export default function DomainManager() {
             >
               <FaRegCopy />
             </div>
-            <pre className="m-0 w-full max-w-full overflow-x-auto">
-              <code className="bg-gray-200 p-2 rounded block w-full">
+            <pre className="m-0 inline-block min-w-[200px] max-w-full overflow-x-auto">
+              <code className="bg-gray-200 p-2 rounded block">
                 {commandText}
               </code>
             </pre>
@@ -235,11 +235,13 @@ export default function DomainManager() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 ml-8">
+      <div className="flex-1 ml-72">
+        {" "}
+        {}
         {selectedAccount && (
           <>
             {renderAccountInfo()}
-            <div className="mb-8">
+            <div className="mb-8 w-full max-w-lg">
               <h2 className="text-lg font-semibold mb-2 flex items-center">
                 <FaSearch className="mr-2" />
                 Search Commands
@@ -254,7 +256,7 @@ export default function DomainManager() {
               />
             </div>
             <hr className="my-4" />
-            <div className="mb-8">
+            <div className="mb-8 w-full max-w-lg">
               <h2 className="text-lg font-semibold mb-2">Target Host</h2>
               <input
                 type="text"

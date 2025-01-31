@@ -4,6 +4,7 @@ import Modal from "@/components/Modal";
 import AccountTypeToggle from "@/components/AccountTypeToggle";
 import { useDomain } from "@/context/DomainContext";
 import Image from "next/image";
+import { FaPlus } from "react-icons/fa";
 
 interface Account {
   username: string;
@@ -178,8 +179,19 @@ export default function Sidebar() {
   );
 
   return (
-    <div className="min-w-64 w-auto bg-gray-100 p-4 h-4/6 overflow-y-auto">
-      <h2 className="text-xl mb-4">Accounts</h2>
+    <div className="w-64 bg-gray-100 p-4 h-screen overflow-y-auto fixed">
+      <div className="flex items-center mb-4">
+        <button
+          onClick={() => {
+            setIsModalOpen(true);
+            setError("");
+          }}
+          className="text-blue-500 mr-2 p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-300"
+        >
+          <FaPlus />
+        </button>
+        <h2 className="text-xl">Accounts</h2>
+      </div>
       <ul>
         {selectedDomain?.accounts.map((account) => (
           <li
@@ -251,15 +263,6 @@ export default function Sidebar() {
           </li>
         ))}
       </ul>
-      <button
-        onClick={() => {
-          setIsModalOpen(true);
-          setError("");
-        }}
-        className="mt-4 bg-blue-500 text-white p-2 w-full"
-      >
-        Add Account
-      </button>
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="p-4">
