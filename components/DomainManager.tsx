@@ -8,7 +8,6 @@ import localCommands from "@/config/commands.local";
 import "react-toastify/dist/ReactToastify.css";
 import { FaSearch, FaRegCopy } from "react-icons/fa";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function DomainManager() {
   const {
