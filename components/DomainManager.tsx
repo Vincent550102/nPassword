@@ -6,7 +6,7 @@ import Modal from "./Modal";
 import domainCommands from "@/config/commands.domain";
 import localCommands from "@/config/commands.local";
 import "react-toastify/dist/ReactToastify.css";
-import { FaRegCopy } from "react-icons/fa";
+import { FaSearch, FaRegCopy } from "react-icons/fa";
 
 export default function DomainManager() {
   const {
@@ -238,34 +238,28 @@ export default function DomainManager() {
           <>
             {renderAccountInfo()}
             <div className="mb-8">
-              <label
-                htmlFor="targetHost"
-                className="block text-lg font-semibold mb-2"
-              >
-                Target Host
-              </label>
-              <input
-                type="text"
-                id="targetHost"
-                value={targetHost}
-                onChange={(e) => setTargetHost(e.target.value)}
-                placeholder="Enter target host"
-                className="border p-2 w-full"
-              />
-            </div>
-            <div className="mb-8">
-              <label
-                htmlFor="searchCommands"
-                className="block text-lg font-semibold mb-2"
-              >
+              <h2 className="text-lg font-semibold mb-2 flex items-center">
+                <FaSearch className="mr-2" />
                 Search Commands
-              </label>
+              </h2>
               <input
                 type="text"
                 id="searchCommands"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search commands"
+                className="border p-2 w-full"
+              />
+            </div>
+            <hr className="my-4" />
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold mb-2">Target Host</h2>
+              <input
+                type="text"
+                id="targetHost"
+                value={targetHost}
+                onChange={(e) => setTargetHost(e.target.value)}
+                placeholder="Enter target host"
                 className="border p-2 w-full"
               />
             </div>
