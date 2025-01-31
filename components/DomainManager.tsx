@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useDomain } from "@/context/DomainContext";
@@ -21,6 +20,7 @@ export default function DomainManager() {
   const [, setIsModalOpen] = useState(false);
   const [newDomain, setNewDomain] = useState("");
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (data.domains.length === 0) {
@@ -86,36 +86,52 @@ export default function DomainManager() {
     const applicableCommands =
       selectedAccount.type === "local" ? localCommands : domainCommands;
 
-    return applicableCommands.map((command, index) => {
-      let commandText = command.template;
-      if (command.authType === "password" && selectedAccount.password) {
-        commandText = commandText
-          .replace("{username}", selectedAccount.username.replace(/'/g, "\\'"))
-          .replace("{password}", selectedAccount.password.replace(/'/g, "\\'"))
-          .replace("{domain}", selectedDomain.name.replace(/'/g, "\\'"))
-          .replace("{targetHost}", targetHost.replace(/'/g, "\\'"));
-      } else if (command.authType === "ntlmHash" && selectedAccount.ntlmHash) {
-        commandText = commandText
-          .replace("{username}", selectedAccount.username.replace(/'/g, "\\'"))
-          .replace("{ntlmHash}", selectedAccount.ntlmHash.replace(/'/g, "\\'"))
-          .replace("{domain}", selectedDomain.name.replace(/'/g, "\\'"))
-          .replace("{targetHost}", targetHost.replace(/'/g, "\\'"));
-      } else {
-        return null; // Skip this command if the required auth type is not available
-      }
-      return (
-        <li key={`${command.name}-${index}`} className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">{command.name}</h3>
-          <code className="bg-gray-200 p-2 rounded">{commandText}</code>
-          <button
-            onClick={() => copyToClipboard(commandText)}
-            className="bg-blue-500 text-white p-2 ml-2 rounded hover:bg-blue-600 transition duration-300"
-          >
-            Copy
-          </button>
-        </li>
-      );
-    });
+    return applicableCommands
+      .filter((command) => command.template.includes(searchTerm))
+      .map((command, index) => {
+        let commandText = command.template;
+        if (command.authType === "password" && selectedAccount.password) {
+          commandText = commandText
+            .replace(
+              "{username}",
+              selectedAccount.username.replace(/'/g, "\\'"),
+            )
+            .replace(
+              "{password}",
+              selectedAccount.password.replace(/'/g, "\\'"),
+            )
+            .replace("{domain}", selectedDomain.name.replace(/'/g, "\\'"))
+            .replace("{targetHost}", targetHost.replace(/'/g, "\\'"));
+        } else if (
+          command.authType === "ntlmHash" &&
+          selectedAccount.ntlmHash
+        ) {
+          commandText = commandText
+            .replace(
+              "{username}",
+              selectedAccount.username.replace(/'/g, "\\'"),
+            )
+            .replace(
+              "{ntlmHash}",
+              selectedAccount.ntlmHash.replace(/'/g, "\\'"),
+            )
+            .replace("{domain}", selectedDomain.name.replace(/'/g, "\\'"))
+            .replace("{targetHost}", targetHost.replace(/'/g, "\\'"));
+        } else {
+          return null; // Skip this command if the required auth type is not available
+        }
+        return (
+          <li key={`${index}`} className="mb-4">
+            <button
+              onClick={() => copyToClipboard(commandText)}
+              className="bg-blue-500 text-white p-2 mr-2 rounded hover:bg-blue-600 transition duration-300"
+            >
+              Copy
+            </button>
+            <code className="bg-gray-200 p-2 rounded">{commandText}</code>
+          </li>
+        );
+      });
   };
 
   const renderAccountInfo = () => {
@@ -231,6 +247,22 @@ export default function DomainManager() {
                 value={targetHost}
                 onChange={(e) => setTargetHost(e.target.value)}
                 placeholder="Enter target host"
+                className="border p-2 w-full"
+              />
+            </div>
+            <div className="mb-8">
+              <label
+                htmlFor="searchCommands"
+                className="block text-lg font-semibold mb-2"
+              >
+                Search Commands
+              </label>
+              <input
+                type="text"
+                id="searchCommands"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search commands"
                 className="border p-2 w-full"
               />
             </div>
