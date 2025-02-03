@@ -27,6 +27,18 @@ This is a Password Manager for Windows Active Directory.
 - [x] Fix UI/UX issues
 - [ ] Add a feature to allow users to customize the command template.
 
+## Feature Demo
+
+### Create account with tag.
+
+https://github.com/user-attachments/assets/e7a37fe1-89b5-42fe-8c69-f90f928ddff9
+
+### Auto-fill command templates with saved account info.
+
+https://github.com/user-attachments/assets/1f991b95-a011-4e35-b784-92eec4a3ed11
+
+---
+
 ## Getting Started
 
 First, run the development server:
@@ -49,12 +61,4 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Feature Demo
 
-### Create account with tag.
-
-https://github.com/user-attachments/assets/e7a37fe1-89b5-42fe-8c69-f90f928ddff9
-
-### Auto-fill command templates with saved account info.
-
-https://github.com/user-attachments/assets/1f991b95-a011-4e35-b784-92eec4a3ed11
