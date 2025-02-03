@@ -8,16 +8,16 @@ This is a Password Manager for Windows Active Directory.
 
 ## Feature
 
-🌐 Pure Front-End: All data is stored locally on the client’s device.
-🔐 Domain-Specific Account Management: Separate and manage accounts by domain.
-📤 One-Click Export/Import: Easily backup or share domain data.
-🖥️ Local Account Support: Manage both domain and local accounts.
-📝 Add Notes: Attach notes to accounts.
-🎨 User-Friendly UI: Intuitive and responsive design.
-⚙️ Automatic Command Integration: Auto-fill command templates with saved account info.
-📋 Command Templates: Pre-defined templates for various tools.
-🔧 Customizable Templates: (Upcoming) Add and customize your own command templates.
-...and more!
+- 🌐 Pure Front-End: All data is stored locally on the client’s device.
+- 🔐 Domain-Specific Account Management: Separate and manage accounts by domain.
+- 📤 One-Click Export/Import: Easily backup or share domain data.
+- 🖥️ Local Account Support: Manage both domain and local accounts.
+- 📝 Add Notes: Attach notes to accounts.
+- 🎨 User-Friendly UI: Intuitive and responsive design.
+- ⚙️ Automatic Command Integration: Auto-fill command templates with saved account info.
+- 📋 Command Templates: Pre-defined templates for various tools.
+- 🔧 Customizable Templates: (Upcoming) Add and customize your own command templates.
+- ...and more!
 
 ## TODO
 
