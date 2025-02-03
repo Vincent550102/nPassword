@@ -6,11 +6,6 @@ This is a Password Manager for Windows Active Directory.
 
 > It is intended solely for research and educational purposes. The author assumes no legal or related responsibility for any consequences arising from the use of this tool.
 
-## Demo
-
-https://github.com/user-attachments/assets/611f2531-ba5c-4160-91a9-d7540355d7a7
-
-
 ## Feature
 
 🌐 Pure Front-End: All data is stored locally on the client’s device.
@@ -53,3 +48,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Feature Demo
+
+### Create account with tag.
+
+https://github.com/user-attachments/assets/e7a37fe1-89b5-42fe-8c69-f90f928ddff9
+
+### Auto-fill command templates with saved account info.
+
+https://github.com/user-attachments/assets/1f991b95-a011-4e35-b784-92eec4a3ed11
