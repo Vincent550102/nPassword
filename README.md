@@ -37,6 +37,43 @@ https://github.com/user-attachments/assets/e7a37fe1-89b5-42fe-8c69-f90f928ddff9
 
 https://github.com/user-attachments/assets/1f991b95-a011-4e35-b784-92eec4a3ed11
 
+### Export and Import domain data with JSON
+
+```
+{
+  "name": "example.tld",
+  "accounts": [
+    {
+      "username": "Alice",
+      "password": "qwer1234!",
+      "ntlmHash": "",
+      "tags": [],
+      "type": "domain",
+      "host": ""
+    },
+    {
+      "username": "Bob",
+      "password": "",
+      "ntlmHash": "00000000000000000000000000000000:7ECFFFF0C3548187607A14BAD0F88BB1",
+      "tags": [
+        "domain admin"
+      ],
+      "type": "domain",
+      "host": ""
+    },
+    {
+      "username": "Cindy",
+      "password": "1qaz@WSX",
+      "ntlmHash": "",
+      "tags": [],
+      "type": "domain",
+      "host": ""
+    }
+  ]
+}
+
+```
+
 ---
 
 ## Getting Started
