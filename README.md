@@ -1,6 +1,11 @@
 # nPassword
 
-This is a Password Manager for Windows Active Directory.
+<img width="931" src="https://github.com/user-attachments/assets/c06fec58-9ba2-4b7d-812c-3d18b8d104da">
+<p align="center">
+  This is a Password Manager for Windows Active Directory.
+</p>
+
+
 
 > This website is a purely front-end application, and all data is stored locally on the client’s device using local storage, then deploy on GitHub Pages.
 
