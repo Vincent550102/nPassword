@@ -72,85 +72,87 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="bg-gray-800 p-4 text-white flex justify-between items-center fixed top-0 left-0 right-0 z-10">
-      <div className="flex items-center space-x-1">
-        <div
-          className="text-xl font-bold cursor-pointer"
-          onClick={handleTitleClick}
-        >
-          nPassword
-        </div>
-        <div className="text-gray-400">.</div>
-        <a
-          href="https://github.com/vincent550102/npassword"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-400 hover:text-gray-300 transition-colors"
-        >
-          source code
-        </a>
-      </div>
-      {selectedDomain && (
-        <div className="flex items-center space-x-2">
-          <select
-            value={selectedDomain ? selectedDomain.name : ""}
-            onChange={(e) => {
-              const selectedDomain = data.domains.find(
-                (domain) => domain.name === e.target.value,
-              );
-              if (selectedDomain) {
-                setSelectedDomain(selectedDomain);
-                setStoredDomainName(selectedDomain.name);
-              } else {
-                setSelectedDomain(null);
-                setStoredDomainName(null);
-              }
-            }}
-            className="bg-gray-700 p-2 rounded"
+    <nav className="bg-gray-800 p-4 text-white fixed top-0 left-0 right-0 z-10">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center">
+          <div
+            className="text-xl font-bold cursor-pointer"
+            onClick={handleTitleClick}
           >
-            <option value="">Select Domain</option>
-            {data.domains.map((domain) => (
-              <option key={domain.name} value={domain.name}>
-                {domain.name}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={() => {
-              setIsModalOpen(true);
-              setError("");
-            }}
-            className="ml-2 bg-blue-500 p-2 rounded"
+            nPassword
+          </div>
+          <div className="text-gray-400">.</div>
+          <a
+            href="https://github.com/vincent550102/npassword"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-gray-300 transition-colors"
           >
-            +
-          </button>
-          <label className="ml-2 bg-yellow-500 text-white p-2 rounded cursor-pointer">
-            Load
-            <input
-              type="file"
-              accept="application/json"
-              onChange={handleLoadData}
-              className="hidden"
-            />
-          </label>
+            source code
+          </a>
         </div>
-      )}
-      <div className="flex items-center space-x-2">
+
         {selectedDomain && (
-          <>
-            <button
-              onClick={() => exportDomainData(selectedDomain.name)}
-              className="bg-green-500 text-white p-2 rounded"
-            >
-              Export
-            </button>
-            <button
-              onClick={handleDeleteDomain}
-              className="bg-red-500 p-2 rounded"
-            >
-              Delete Domain
-            </button>
-          </>
+          <div className="flex flex-col md:flex-row items-end space-y-2 md:space-y-0 md:space-x-2">
+            <div className="flex items-center space-x-2">
+              <select
+                value={selectedDomain ? selectedDomain.name : ""}
+                onChange={(e) => {
+                  const selectedDomain = data.domains.find(
+                    (domain) => domain.name === e.target.value,
+                  );
+                  if (selectedDomain) {
+                    setSelectedDomain(selectedDomain);
+                    setStoredDomainName(selectedDomain.name);
+                  } else {
+                    setSelectedDomain(null);
+                    setStoredDomainName(null);
+                  }
+                }}
+                className="bg-gray-700 p-2 rounded w-40 sm:w-48"
+              >
+                <option value="">Select Domain</option>
+                {data.domains.map((domain) => (
+                  <option key={domain.name} value={domain.name}>
+                    {domain.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setError("");
+                }}
+                className="bg-blue-500 p-2 rounded flex-shrink-0 w-10"
+              >
+                +
+              </button>
+              <label className="bg-yellow-500 text-white p-2 rounded cursor-pointer flex-shrink-0">
+                Load
+                <input
+                  type="file"
+                  accept="application/json"
+                  onChange={handleLoadData}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            <div className="hidden md:flex items-center space-x-2">
+              <button
+                onClick={() => exportDomainData(selectedDomain.name)}
+                className="bg-green-500 text-white p-2 rounded"
+              >
+                Export
+              </button>
+              <button
+                onClick={handleDeleteDomain}
+                className="bg-red-500 p-2 rounded"
+              >
+                Delete Domain
+              </button>
+            </div>
+          </div>
         )}
       </div>
       {isModalOpen && (

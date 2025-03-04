@@ -6,7 +6,8 @@ export default function Home() {
   return (
     <div>
       <NavBar />
-      <div className="min-h-screen p-8 pb-20 sm:p-20">
+      <div className="min-h-screen pt-16">
+        {" "}
         <DomainManager />
       </div>
     </div>

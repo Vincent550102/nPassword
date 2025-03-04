@@ -179,7 +179,7 @@ export default function Sidebar() {
   );
 
   return (
-    <div className="w-64 bg-gray-100 p-4 h-screen overflow-y-auto fixed">
+    <div className="w-[calc(100%+2rem)] md:w-64 bg-gray-100 p-4 md:h-screen md:fixed md:overflow-y-auto overflow-x-auto -mx-4 md:mx-0 px-4">
       <div className="flex items-center mb-4">
         <button
           onClick={() => {
@@ -192,16 +192,23 @@ export default function Sidebar() {
         </button>
         <h2 className="text-xl">Accounts</h2>
       </div>
-      <ul>
+
+      <div className="flex md:block space-x-2 md:space-x-0">
         {selectedDomain?.accounts.map((account) => (
-          <li
+          <div
             key={account.username}
             onClick={() => setSelectedAccount(account)}
-            className={`mb-2 flex flex-col p-2 rounded cursor-pointer transition-shadow transform hover:shadow-md active:scale-95 ${
-              selectedAccount?.username === account.username
-                ? "bg-gray-300"
-                : "bg-white"
-            }`}
+            className={`
+              shrink-0 md:shrink
+              md:mb-2
+              p-2 rounded
+              cursor-pointer
+              transition-shadow
+              transform
+              hover:shadow-md
+              active:scale-95
+              ${selectedAccount?.username === account.username ? "bg-gray-300" : "bg-white"}
+            `}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -217,17 +224,17 @@ export default function Sidebar() {
                   height={32}
                 />
                 <div className="flex flex-col">
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 whitespace-nowrap">
                     {account.type === "local"
                       ? account.host + "$"
                       : selectedDomain.name + "/"}
                   </span>
-                  <span className="text-black text-lg ml-2 truncate max-w-xs">
+                  <span className="text-black text-lg ml-2 whitespace-nowrap">
                     {account.username}
                   </span>
                 </div>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center ml-4">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -253,16 +260,17 @@ export default function Sidebar() {
                 {account.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded whitespace-nowrap"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
             )}
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
+
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="p-4">

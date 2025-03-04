@@ -36,19 +36,26 @@ export default function Modal({
 
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center text-black transition-opacity duration-300 ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center text-black transition-opacity duration-300 z-50 p-4 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
     >
       <div
         ref={modalRef}
-        className={`bg-white p-4 rounded shadow-lg relative transform transition-transform duration-300 ${isVisible ? "scale-100" : "scale-90"} w-1/3`}
+        className={`
+          bg-white rounded-lg shadow-xl relative
+          transform transition-transform duration-300
+          w-full md:w-1/3 max-h-[90vh] overflow-y-auto
+          ${isVisible ? "scale-100" : "scale-90"}
+        `}
       >
         <button
           onClick={handleClose}
-          className="absolute top-2 right-2 text-gray-500"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl"
         >
           &times;
         </button>
-        {children}
+        <div className="p-6">{children}</div>
       </div>
     </div>
   );

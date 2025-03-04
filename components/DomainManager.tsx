@@ -259,44 +259,48 @@ export default function DomainManager() {
   }
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="flex-1 ml-72">
-        {" "}
-        {}
+    <div className="flex flex-col">
+      <div className="w-full">
+        <Sidebar />
+      </div>
+
+      <div className="w-full md:pl-64 px-4">
         {selectedAccount && (
           <>
-            {renderAccountInfo()}
-            <div className="mb-8 w-full max-w-lg">
-              <h2 className="text-lg font-semibold mb-2 flex items-center">
-                <FaSearch className="mr-2" />
-                Search Commands
+            <div className="md:mt-0 mt-4">
+              {" "}
+              {renderAccountInfo()}
+              <div className="mb-8 w-full max-w-lg">
+                <h2 className="text-lg font-semibold mb-2 flex items-center">
+                  <FaSearch className="mr-2" />
+                  Search Commands
+                </h2>
+                <input
+                  type="text"
+                  id="searchCommands"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search commands"
+                  className="border p-2 w-full"
+                />
+              </div>
+              <hr className="my-4" />
+              <div className="mb-8 w-full max-w-lg">
+                <h2 className="text-lg font-semibold mb-2">Target Host</h2>
+                <input
+                  type="text"
+                  id="targetHost"
+                  value={targetHost}
+                  onChange={(e) => setTargetHost(e.target.value)}
+                  placeholder="Enter target host"
+                  className="border p-2 w-full"
+                />
+              </div>
+              <h2 className="text-xl mb-2">
+                Commands for {selectedAccount.username}
               </h2>
-              <input
-                type="text"
-                id="searchCommands"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search commands"
-                className="border p-2 w-full"
-              />
+              <ul>{renderCommands()}</ul>
             </div>
-            <hr className="my-4" />
-            <div className="mb-8 w-full max-w-lg">
-              <h2 className="text-lg font-semibold mb-2">Target Host</h2>
-              <input
-                type="text"
-                id="targetHost"
-                value={targetHost}
-                onChange={(e) => setTargetHost(e.target.value)}
-                placeholder="Enter target host"
-                className="border p-2 w-full"
-              />
-            </div>
-            <h2 className="text-xl mb-2">
-              Commands for {selectedAccount.username}
-            </h2>
-            <ul>{renderCommands()}</ul>
           </>
         )}
       </div>
