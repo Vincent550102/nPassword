@@ -82,6 +82,10 @@ const domainCommands: Command[] = [
       "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "ntlmHash",
   },
+  {
+    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
+    authType: "ntlmHash",
+  },
 ];
 
 export default domainCommands;
