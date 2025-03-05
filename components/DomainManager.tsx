@@ -264,7 +264,7 @@ export default function DomainManager() {
         <Sidebar />
       </div>
 
-      <div className="w-full md:pl-64 px-4">
+      <div className="w-full md:pl-64 px-4 md:ml-4 ml-0">
         {selectedAccount && (
           <>
             <div className="md:mt-0 mt-4">
