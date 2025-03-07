@@ -26,6 +26,11 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "impacket-mssqlclient '{domain}'/'{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
+    template:
       "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "password",
   },
@@ -41,6 +46,11 @@ const domainCommands: Command[] = [
   {
     template:
       "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
+    template:
+      "rpcclient -U '{domain}/{username}' --password '{password}' '{targetHost}'",
     authType: "password",
   },
   {
@@ -65,6 +75,11 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "impacket-mssqlclient '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
       "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "ntlmHash",
   },
@@ -80,6 +95,11 @@ const domainCommands: Command[] = [
   {
     template:
       "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "rpcclient -U '{domain}/{username}' --pw-nt-hash '{ntlmHash}' '{targetHost}'",
     authType: "ntlmHash",
   },
 ];
