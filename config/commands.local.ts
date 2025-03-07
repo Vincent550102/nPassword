@@ -21,12 +21,20 @@ const localCommands: Command[] = [
     authType: "password",
   },
   {
+    template: "impacket-mssqlclient '{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
     template:
       "xfreerdp /u:'{username}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
     authType: "password",
   },
   {
     template: "evil-winrm -u '{username}' -p '{password}' -i '{targetHost}'",
+    authType: "password",
+  },
+  {
+    template: "rpcclient -U '{username}' --password '{password}' '{targetHost}'",
     authType: "password",
   },
   {
@@ -50,12 +58,21 @@ const localCommands: Command[] = [
     authType: "ntlmHash",
   },
   {
-    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
+    template:
+      "impacket-mssqlclient '{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
       "xfreerdp /u:'{username}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
+    authType: "ntlmHash",
+  },
+  {
+    template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
+    authType: "ntlmHash",
+  },
+  {
+    template: "rpcclient -U '{username}' --pw-nt-hash '{ntlmHash}' '{targetHost}'",
     authType: "ntlmHash",
   },
 ];
