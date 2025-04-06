@@ -15,6 +15,7 @@ export interface Domain {
   name: string;
   accounts: Account[];
 }
+
 interface Data {
   domains: Domain[];
 }
@@ -49,6 +50,44 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  // This effect runs once when the component mounts on the client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // This effect loads the selected domain from localStorage on the client
+  useEffect(() => {
+    // Only run on the client after initial render
+    if (!isClient) return;
+
+    try {
+      const storedDomainName = localStorage.getItem("selectedDomain");
+      if (storedDomainName) {
+        const parsedName = JSON.parse(storedDomainName);
+        const domain = data.domains.find((d) => d.name === parsedName);
+        if (domain) {
+          console.log("Setting initial domain from localStorage:", domain.name);
+          setSelectedDomain(domain);
+        }
+      }
+    } catch (e) {
+      console.error("Error loading initial domain:", e);
+    }
+  }, [isClient, data.domains]);
+
+  // Save selectedDomain to localStorage when it changes (client-side only)
+  useEffect(() => {
+    if (!isClient) return;
+
+    if (selectedDomain) {
+      localStorage.setItem(
+        "selectedDomain",
+        JSON.stringify(selectedDomain.name),
+      );
+    }
+  }, [selectedDomain, isClient]);
 
   useEffect(() => {
     setSelectedAccount(null);
@@ -65,6 +104,11 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
       domains: prevData.domains.filter((domain) => domain.name !== domainName),
     }));
     setSelectedDomain(null);
+
+    // Only clear localStorage on the client
+    if (isClient) {
+      localStorage.removeItem("selectedDomain");
+    }
   };
 
   const addAccount = (newAccount: Account) => {
@@ -181,6 +225,8 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const exportDomainData = (domainName: string) => {
+    if (!isClient) return;
+
     const domain = data.domains.find((d) => d.name === domainName);
     if (domain) {
       const dataStr = JSON.stringify(domain, null, 2);
@@ -206,7 +252,7 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
       const updatedData = {
         domains: [...prevData.domains, newDomain],
       };
-      setSelectedDomain(newDomain); // 立即設置選中的域
+      setSelectedDomain(newDomain);
       return updatedData;
     });
   };

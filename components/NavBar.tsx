@@ -1,8 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Modal from "@/components/Modal";
 import { useDomain, Domain } from "@/context/DomainContext";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 
 export default function NavBar() {
   const {
@@ -14,6 +16,7 @@ export default function NavBar() {
     exportDomainData,
     loadDomainData,
   } = useDomain();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDomain, setNewDomain] = useState("");
   const [error, setError] = useState("");
@@ -23,53 +26,89 @@ export default function NavBar() {
     null,
   );
 
-  const handleAddDomain = () => {
-    if (newDomain.trim() === "") return;
+  const handleAddDomain = useCallback(() => {
+    if (newDomain.trim() === "") {
+      setError("Domain name cannot be empty.");
+      return;
+    }
+
     const domainExists = data.domains.some(
       (domain) => domain.name === newDomain,
     );
+
     if (domainExists) {
       setError("Domain already exists.");
       return;
     }
+
     const newDomainObject: Domain = { name: newDomain, accounts: [] };
     addDomain(newDomainObject);
     setNewDomain("");
     setSelectedDomain(newDomainObject);
     setIsModalOpen(false);
-  };
+  }, [newDomain, data.domains, addDomain, setSelectedDomain]);
 
-  const handleDeleteDomain = () => {
+  const handleDeleteDomain = useCallback(() => {
     if (selectedDomain) {
       setDomainToDelete(selectedDomain.name);
     }
-  };
+  }, [selectedDomain]);
 
-  const confirmDeleteDomain = () => {
+  const confirmDeleteDomain = useCallback(() => {
     if (domainToDelete) {
       deleteDomain(domainToDelete);
       setDomainToDelete(null);
     }
-  };
+  }, [domainToDelete, deleteDomain]);
 
-  const handleLoadData = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
+  const handleLoadData = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
       const reader = new FileReader();
       reader.onload = (e) => {
-        const text = e.target?.result as string;
-        const newDomain = JSON.parse(text);
-        loadDomainData(newDomain);
-        event.target.value = "";
+        try {
+          const text = e.target?.result as string;
+          const newDomain = JSON.parse(text);
+          loadDomainData(newDomain);
+          event.target.value = "";
+        } catch (error) {
+          console.error("Error loading domain data:", error);
+        }
       };
-      reader.readAsText(file);
-    }
-  };
 
-  const handleTitleClick = () => {
+      reader.onerror = () => {
+        console.error("Error reading file");
+      };
+
+      reader.readAsText(file);
+    },
+    [loadDomainData],
+  );
+
+  const handleTitleClick = useCallback(() => {
     setSelectedDomain(null);
     setStoredDomainName(null);
-  };
+  }, [setSelectedDomain, setStoredDomainName]);
+
+  const handleDomainChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
+      if (!value) {
+        setSelectedDomain(null);
+        setStoredDomainName(null);
+        return;
+      }
+
+      const domain = data.domains.find((d) => d.name === value);
+      if (domain) {
+        setSelectedDomain(domain);
+        setStoredDomainName(domain.name);
+      }
+    },
+    [data.domains, setSelectedDomain, setStoredDomainName],
+  );
 
   return (
     <nav className="bg-gray-800 p-4 text-white fixed top-0 left-0 right-0 z-10">
@@ -96,20 +135,10 @@ export default function NavBar() {
           <div className="flex flex-col md:flex-row items-end space-y-2 md:space-y-0 md:space-x-2">
             <div className="flex items-center space-x-2">
               <select
-                value={selectedDomain ? selectedDomain.name : ""}
-                onChange={(e) => {
-                  const selectedDomain = data.domains.find(
-                    (domain) => domain.name === e.target.value,
-                  );
-                  if (selectedDomain) {
-                    setSelectedDomain(selectedDomain);
-                    setStoredDomainName(selectedDomain.name);
-                  } else {
-                    setSelectedDomain(null);
-                    setStoredDomainName(null);
-                  }
-                }}
+                value={selectedDomain.name}
+                onChange={handleDomainChange}
                 className="bg-gray-700 p-2 rounded w-40 sm:w-48"
+                aria-label="Select domain"
               >
                 <option value="">Select Domain</option>
                 {data.domains.map((domain) => (
@@ -123,11 +152,12 @@ export default function NavBar() {
                   setIsModalOpen(true);
                   setError("");
                 }}
-                className="bg-blue-500 p-2 rounded flex-shrink-0 w-10"
+                className="bg-blue-500 p-2 rounded flex-shrink-0 w-10 hover:bg-blue-600 transition-colors"
+                aria-label="Add domain"
               >
                 +
               </button>
-              <label className="bg-yellow-500 text-white p-2 rounded cursor-pointer flex-shrink-0">
+              <label className="bg-yellow-500 text-white p-2 rounded cursor-pointer flex-shrink-0 hover:bg-yellow-600 transition-colors">
                 Load
                 <input
                   type="file"
@@ -140,14 +170,16 @@ export default function NavBar() {
 
             <div className="hidden md:flex items-center space-x-2">
               <button
-                onClick={() => exportDomainData(selectedDomain.name)}
-                className="bg-green-500 text-white p-2 rounded"
+                onClick={() =>
+                  selectedDomain && exportDomainData(selectedDomain.name)
+                }
+                className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition-colors"
               >
                 Export
               </button>
               <button
                 onClick={handleDeleteDomain}
-                className="bg-red-500 p-2 rounded"
+                className="bg-red-500 p-2 rounded hover:bg-red-600 transition-colors"
               >
                 Delete Domain
               </button>
@@ -157,46 +189,40 @@ export default function NavBar() {
       </div>
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <div className="p-4">
-            <h2 className="text-xl mb-4">Add New Domain</h2>
-            <input
-              type="text"
+          <div className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Add New Domain</h2>
+            <Input
+              label="Domain Name"
               value={newDomain}
               onChange={(e) => setNewDomain(e.target.value)}
-              placeholder="New domain"
-              className="border p-2 mb-4 w-full text-black"
+              placeholder="Enter domain name"
+              error={error}
+              className="mb-6"
             />
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-            <button
-              onClick={handleAddDomain}
-              className="bg-blue-500 text-white p-2 w-full"
-            >
+            <Button onClick={handleAddDomain} variant="primary" fullWidth>
               Add Domain
-            </button>
+            </Button>
           </div>
         </Modal>
       )}
       {domainToDelete && (
         <Modal onClose={() => setDomainToDelete(null)}>
-          <div className="p-4">
-            <h2 className="text-xl mb-4">Confirm Delete</h2>
+          <div className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Confirm Delete</h2>
             <p>
               Are you sure you want to delete the domain &quot;{domainToDelete}
               &quot;?
             </p>
-            <div className="flex justify-end mt-4">
-              <button
+            <div className="flex justify-end mt-6 space-x-2">
+              <Button
                 onClick={() => setDomainToDelete(null)}
-                className="bg-gray-500 text-white p-2 mr-2"
+                variant="secondary"
               >
                 Cancel
-              </button>
-              <button
-                onClick={confirmDeleteDomain}
-                className="bg-red-500 text-white p-2"
-              >
+              </Button>
+              <Button onClick={confirmDeleteDomain} variant="danger">
                 Delete
-              </button>
+              </Button>
             </div>
           </div>
         </Modal>

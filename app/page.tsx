@@ -1,5 +1,5 @@
 "use client";
-import DomainManager from "@/components/DomainManager";
+import DomainInitializer from "@/components/DomainInitializer";
 import NavBar from "@/components/NavBar";
 
 export default function Home() {
@@ -7,8 +7,7 @@ export default function Home() {
     <div>
       <NavBar />
       <div className="min-h-screen pt-16">
-        {" "}
-        <DomainManager />
+        <DomainInitializer />
       </div>
     </div>
   );

@@ -1,19 +1,11 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import Modal from "@/components/Modal";
-import AccountTypeToggle from "@/components/AccountTypeToggle";
 import { useDomain } from "@/context/DomainContext";
 import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
-
-interface Account {
-  username: string;
-  password?: string;
-  ntlmHash?: string;
-  tags?: string[];
-  type: "local" | "domain";
-  host?: string;
-}
+import AccountForm from "@/components/AccountForm";
+import { Account } from "@/types";
 
 export default function Sidebar() {
   const {
@@ -24,61 +16,29 @@ export default function Sidebar() {
     deleteAccount,
     updateAccount,
   } = useDomain();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [newAccount, setNewAccount] = useState({
-    username: "",
-    password: "",
-    ntlmHash: "",
-    tags: [] as string[],
-    type: "domain" as "local" | "domain",
-    host: "",
-  });
-  const [editAccount, setEditAccount] = useState({
-    username: "",
-    password: "",
-    ntlmHash: "",
-    tags: [] as string[],
-    type: "domain" as "local" | "domain",
-    host: "",
-  });
-  const [newTag, setNewTag] = useState("");
-  const [editTag, setEditTag] = useState("");
-  const [error, setError] = useState("");
   const [accountToDelete, setAccountToDelete] = useState<string | null>(null);
-  const [isTagInputVisible, setIsTagInputVisible] = useState(false);
-  const [isEditTagInputVisible, setIsEditTagInputVisible] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (selectedDomain) {
-      const accountExists = selectedDomain.accounts.some(
-        (account) => account.username === newAccount.username,
-      );
-      if (accountExists) {
-        setError("Username already exists.");
-      } else {
-        setError("");
-      }
-    }
-  }, [newAccount.username, selectedDomain]);
-
-  const handleAddAccount = () => {
+  const handleAddAccount = (account: Account) => {
     if (
-      newAccount.username.trim() === "" ||
-      (newAccount.password.trim() === "" && newAccount.ntlmHash.trim() === "")
-    )
+      selectedDomain &&
+      selectedDomain.accounts.some((a) => a.username === account.username)
+    ) {
+      setError("Username already exists.");
       return;
-    if (error) return;
-    addAccount(newAccount);
-    setNewAccount({
-      username: "",
-      password: "",
-      ntlmHash: "",
-      tags: [],
-      type: "domain",
-      host: "",
-    });
+    }
+
+    addAccount(account);
     setIsModalOpen(false);
+    setError("");
+  };
+
+  const handleUpdateAccount = (account: Account) => {
+    updateAccount(selectedAccount!.username, account);
+    setIsEditModalOpen(false);
   };
 
   const handleDeleteAccount = (username: string) => {
@@ -92,91 +52,14 @@ export default function Sidebar() {
     }
   };
 
-  const handleEditAccount = (account: Account) => {
-    setEditAccount({
-      username: account.username || "",
-      password: account.password || "",
-      ntlmHash: account.ntlmHash || "",
-      tags: account.tags || [],
-      type: account.type,
-      host: account.host || "",
-    });
-    setIsEditModalOpen(true);
-  };
-
-  const handleUpdateAccount = () => {
-    if (
-      editAccount.username.trim() === "" ||
-      (editAccount.password.trim() === "" && editAccount.ntlmHash.trim() === "")
-    )
-      return;
-    updateAccount(editAccount.username, editAccount);
-    setIsEditModalOpen(false);
-  };
-
-  const handleAddNewTag = () => {
-    if (newTag.trim() === "") return;
-    setNewAccount((prev) => ({
-      ...prev,
-      tags: [...prev.tags, newTag],
-    }));
-    setNewTag("");
-    setIsTagInputVisible(false);
-  };
-
-  const handleRemoveNewTag = (tag: string) => {
-    setNewAccount((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((t) => t !== tag),
-    }));
-  };
-
-  const handleAddEditTag = () => {
-    if (editTag.trim() === "") return;
-    setEditAccount((prev) => ({
-      ...prev,
-      tags: [...prev.tags, editTag],
-    }));
-    setEditTag("");
-    setIsEditTagInputVisible(false);
-  };
-
-  const handleRemoveEditTag = (tag: string) => {
-    setEditAccount((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((t) => t !== tag),
-    }));
-  };
-
-  const handleTagInputKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    type: "new" | "edit",
-  ) => {
-    if (e.key === "Enter") {
-      if (type === "new") {
-        handleAddNewTag();
-      } else {
-        handleAddEditTag();
-      }
-    }
-  };
-
-  const handleAccountTypeChange = useCallback((type: "local" | "domain") => {
-    setNewAccount((prev) => ({
-      ...prev,
-      type,
-    }));
-  }, []);
-
-  const handleEditAccountTypeChange = useCallback(
-    (type: "local" | "domain") => {
-      setEditAccount((prev) => ({
-        ...prev,
-        type,
-      }));
-    },
-    [],
-  );
+  const getEmptyAccount = () => ({
+    username: "",
+    password: "",
+    ntlmHash: "",
+    tags: [] as string[],
+    type: "domain" as "local" | "domain",
+    host: "",
+  });
 
   return (
     <div className="w-[calc(100%+2rem)] md:w-64 bg-gray-100 p-4 md:h-screen md:fixed md:overflow-y-auto overflow-x-auto -mx-4 md:mx-0 px-4">
@@ -238,7 +121,8 @@ export default function Sidebar() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleEditAccount(account);
+                    setIsEditModalOpen(true);
+                    setSelectedAccount(account);
                   }}
                   className="text-blue-500 ml-2"
                 >
@@ -275,177 +159,38 @@ export default function Sidebar() {
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="p-4">
             <h2 className="text-xl mb-4">Add New Account</h2>
-            <AccountTypeToggle
-              onChange={handleAccountTypeChange}
-              initialType="domain"
+            <AccountForm
+              initialData={getEmptyAccount()}
+              onSubmit={handleAddAccount}
+              onCancel={() => setIsModalOpen(false)}
+              submitLabel="Add Account"
+              error={error}
             />
-            {newAccount.type === "local" && (
-              <input
-                type="text"
-                value={newAccount.host}
-                onChange={(e) =>
-                  setNewAccount({ ...newAccount, host: e.target.value })
-                }
-                placeholder="Host"
-                className="border p-2 mb-4 w-full text-black"
-              />
-            )}
-            <input
-              type="text"
-              value={newAccount.username}
-              onChange={(e) =>
-                setNewAccount({ ...newAccount, username: e.target.value })
-              }
-              placeholder="Username"
-              className="border p-2 mb-4 w-full text-black"
-            />
-            <input
-              type="text"
-              value={newAccount.password}
-              onChange={(e) =>
-                setNewAccount({ ...newAccount, password: e.target.value })
-              }
-              placeholder="Password"
-              className="border p-2 mb-4 w-full text-black"
-            />
-            <input
-              type="text"
-              value={newAccount.ntlmHash}
-              onChange={(e) =>
-                setNewAccount({ ...newAccount, ntlmHash: e.target.value })
-              }
-              placeholder="NTLM Hash"
-              className="border p-2 mb-4 w-full text-black"
-            />
-            <div className="mb-4">
-              <h3 className="text-lg mb-2">Tags</h3>
-              <div className="flex flex-wrap mb-2">
-                {newAccount.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded cursor-pointer"
-                    onClick={() => handleRemoveNewTag(tag)}
-                  >
-                    {tag} &times;
-                  </span>
-                ))}
-                {isTagInputVisible ? (
-                  <input
-                    type="text"
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    onKeyDown={(e) => handleTagInputKeyDown(e, "new")}
-                    placeholder="New tag"
-                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                    autoFocus
-                  />
-                ) : (
-                  <button
-                    onClick={() => setIsTagInputVisible(true)}
-                    className="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                  >
-                    + Add Tag
-                  </button>
-                )}
-              </div>
-            </div>
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-            <button
-              onClick={handleAddAccount}
-              className="bg-blue-500 text-white p-2 w-full"
-            >
-              Add Account
-            </button>
           </div>
         </Modal>
       )}
-      {isEditModalOpen && (
+
+      {isEditModalOpen && selectedAccount && (
         <Modal onClose={() => setIsEditModalOpen(false)}>
           <div className="p-4">
             <h2 className="text-xl mb-4">Edit Account</h2>
-            <AccountTypeToggle
-              onChange={handleEditAccountTypeChange}
-              initialType={editAccount.type}
+            <AccountForm
+              initialData={{
+                username: selectedAccount.username,
+                password: selectedAccount.password || "",
+                ntlmHash: selectedAccount.ntlmHash || "",
+                tags: selectedAccount.tags || [],
+                type: selectedAccount.type,
+                host: selectedAccount.host || "",
+              }}
+              onSubmit={handleUpdateAccount}
+              onCancel={() => setIsEditModalOpen(false)}
+              submitLabel="Update Account"
             />
-            {editAccount.type === "local" && (
-              <input
-                type="text"
-                value={editAccount.host}
-                onChange={(e) =>
-                  setEditAccount({ ...editAccount, host: e.target.value })
-                }
-                placeholder="Host"
-                className="border p-2 mb-4 w-full text-black"
-              />
-            )}
-            <input
-              type="text"
-              value={editAccount.username}
-              onChange={(e) =>
-                setEditAccount({ ...editAccount, username: e.target.value })
-              }
-              placeholder="Username"
-              className="border p-2 mb-4 w-full text-black"
-            />
-            <input
-              type="text"
-              value={editAccount.password}
-              onChange={(e) =>
-                setEditAccount({ ...editAccount, password: e.target.value })
-              }
-              placeholder="Password"
-              className="border p-2 mb-4 w-full text-black"
-            />
-            <input
-              type="text"
-              value={editAccount.ntlmHash}
-              onChange={(e) =>
-                setEditAccount({ ...editAccount, ntlmHash: e.target.value })
-              }
-              placeholder="NTLM Hash"
-              className="border p-2 mb-4 w-full text-black"
-            />
-            <div className="mb-4">
-              <h3 className="text-lg mb-2">Tags</h3>
-              <div className="flex flex-wrap mb-2">
-                {editAccount.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded cursor-pointer"
-                    onClick={() => handleRemoveEditTag(tag)}
-                  >
-                    {tag} &times;
-                  </span>
-                ))}
-                {isEditTagInputVisible ? (
-                  <input
-                    type="text"
-                    value={editTag}
-                    onChange={(e) => setEditTag(e.target.value)}
-                    onKeyDown={(e) => handleTagInputKeyDown(e, "edit")}
-                    placeholder="New tag"
-                    className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                    autoFocus
-                  />
-                ) : (
-                  <button
-                    onClick={() => setIsEditTagInputVisible(true)}
-                    className="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                  >
-                    + Add Tag
-                  </button>
-                )}
-              </div>
-            </div>
-            <button
-              onClick={handleUpdateAccount}
-              className="bg-blue-500 text-white p-2 w-full"
-            >
-              Update Account
-            </button>
           </div>
         </Modal>
       )}
+
       {accountToDelete && (
         <Modal onClose={() => setAccountToDelete(null)}>
           <div className="p-4">

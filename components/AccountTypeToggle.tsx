@@ -20,8 +20,10 @@ const AccountTypeToggle: React.FC<AccountTypeToggleProps> = ({
   );
 
   useEffect(() => {
-    onChange(selected);
-  }, [selected, onChange]);
+    if (initialType !== selected) {
+      onChange(initialType);
+    }
+  }, []);
 
   return (
     <div className="flex justify-center my-4">
