@@ -35,6 +35,11 @@ const domainCommands: Command[] = [
     authType: "password",
   },
   {
+    template:
+      "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /drive:.,linux /bpp:8 /compression -themes -wallpaper /clipboard /audio-mode:0 /auto-reconnect -glyph-cache",
+    authType: "password",
+  },
+  {
     template: "evil-winrm -u '{username}' -p '{password}' -i '{targetHost}'",
     authType: "password",
   },
