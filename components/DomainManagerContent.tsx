@@ -17,12 +17,7 @@ interface DomainManagerContentProps {
 const DomainManagerContent: React.FC<DomainManagerContentProps> = ({
   openDomainModal,
 }) => {
-  const {
-    selectedDomain,
-    selectedAccount,
-    addTagToAccount,
-    removeTagFromAccount,
-  } = useDomain();
+  const { selectedDomain, selectedAccount } = useDomain();
 
   const [targetHost, setTargetHost] = useState<string>("");
   const [commandSearchTerm, setCommandSearchTerm] = useState<string>("");
@@ -53,8 +48,6 @@ const DomainManagerContent: React.FC<DomainManagerContentProps> = ({
               <AccountInfo
                 selectedAccount={selectedAccount}
                 selectedDomain={selectedDomain}
-                addTagToAccount={addTagToAccount}
-                removeTagFromAccount={removeTagFromAccount}
               />
 
               <Card title="Connection Options" className="mb-4">
