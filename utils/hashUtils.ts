@@ -1,3 +1,4 @@
+// @ts-expect-error - js-md4 doesn't have types
 import md4 from "js-md4";
 
 export function calculateNTHash(password: string): string {
