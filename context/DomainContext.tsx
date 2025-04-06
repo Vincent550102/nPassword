@@ -36,6 +36,7 @@ interface DomainContextType {
   addTagToAccount: (username: string, tag: string) => void;
   removeTagFromAccount: (username: string, tag: string) => void;
   exportDomainData: (domainName: string) => void;
+  exportUsernames: (domainName: string) => void;
   loadDomainData: (newDomain: Domain) => void;
 }
 
@@ -256,6 +257,24 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
       return updatedData;
     });
   };
+  const exportUsernames = (domainName: string) => {
+    if (!isClient) return;
+
+    const domain = data.domains.find((d) => d.name === domainName);
+    if (domain) {
+      // Create a simple text file with one username per line
+      const usernamesText = domain.accounts
+        .map((account) => account.username)
+        .join("\n");
+      const blob = new Blob([usernamesText], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `users.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  };
 
   return (
     <DomainContext.Provider
@@ -271,6 +290,7 @@ export const DomainProvider: React.FC<{ children: React.ReactNode }> = ({
         deleteAccount,
         updateAccount,
         exportDomainData,
+        exportUsernames,
         loadDomainData,
         addTagToAccount,
         removeTagFromAccount,

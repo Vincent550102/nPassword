@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Modal from "@/components/Modal";
 import { useDomain, Domain } from "@/context/DomainContext";
 import useLocalStorage from "@/hooks/useLocalStorage";
@@ -14,6 +14,7 @@ export default function NavBar() {
     addDomain,
     deleteDomain,
     exportDomainData,
+    exportUsernames,
     loadDomainData,
   } = useDomain();
 
@@ -25,6 +26,27 @@ export default function NavBar() {
     "selectedDomain",
     null,
   );
+
+  // For export dropdown menu
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
+
+  // Close export dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        exportRef.current &&
+        !exportRef.current.contains(event.target as Node)
+      ) {
+        setShowExportOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleAddDomain = useCallback(() => {
     if (newDomain.trim() === "") {
@@ -110,6 +132,20 @@ export default function NavBar() {
     [data.domains, setSelectedDomain, setStoredDomainName],
   );
 
+  const handleExportJSON = useCallback(() => {
+    if (selectedDomain) {
+      exportDomainData(selectedDomain.name);
+    }
+    setShowExportOptions(false);
+  }, [selectedDomain, exportDomainData]);
+
+  const handleExportUsernames = useCallback(() => {
+    if (selectedDomain) {
+      exportUsernames(selectedDomain.name);
+    }
+    setShowExportOptions(false);
+  }, [selectedDomain, exportUsernames]);
+
   return (
     <nav className="bg-gray-800 p-4 text-white fixed top-0 left-0 right-0 z-10">
       <div className="flex justify-between items-center">
@@ -169,14 +205,36 @@ export default function NavBar() {
             </div>
 
             <div className="hidden md:flex items-center space-x-2">
-              <button
-                onClick={() =>
-                  selectedDomain && exportDomainData(selectedDomain.name)
-                }
-                className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition-colors"
-              >
-                Export
-              </button>
+              <div className="relative" ref={exportRef}>
+                <button
+                  onClick={() => setShowExportOptions(!showExportOptions)}
+                  className="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition-colors"
+                >
+                  Export
+                </button>
+                {showExportOptions && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                    <ul className="py-1">
+                      <li>
+                        <button
+                          onClick={handleExportJSON}
+                          className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-left"
+                        >
+                          Export Full JSON
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={handleExportUsernames}
+                          className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-left"
+                        >
+                          Export users.txt
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={handleDeleteDomain}
                 className="bg-red-500 p-2 rounded hover:bg-red-600 transition-colors"
