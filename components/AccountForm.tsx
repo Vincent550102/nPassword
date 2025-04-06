@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AccountTypeToggle from "@/components/AccountTypeToggle";
 import { Account } from "@/types";
 import Input from "@/components/ui/Input";
+import { calculateNTHash } from "@/utils/hashUtils";
 
 interface AccountFormProps {
   initialData: {
@@ -28,8 +29,25 @@ const AccountForm: React.FC<AccountFormProps> = ({
   const [formData, setFormData] = useState(initialData);
   const [newTag, setNewTag] = useState("");
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
+  const [autoNTHash, setAutoNTHash] = useState(initialData.ntlmHash === "");
+
+  // Auto-generate NT hash when password changes
+  useEffect(() => {
+    if (autoNTHash && formData.password) {
+      const ntHash = calculateNTHash(formData.password);
+      setFormData((prev) => ({
+        ...prev,
+        ntlmHash: ntHash,
+      }));
+    }
+  }, [formData.password, autoNTHash]);
 
   const handleChange = (field: string, value: string) => {
+    // If manually editing the NT hash, disable auto-generation
+    if (field === "ntlmHash" && autoNTHash) {
+      setAutoNTHash(false);
+    }
+
     setFormData({
       ...formData,
       [field]: value,
@@ -69,6 +87,19 @@ const AccountForm: React.FC<AccountFormProps> = ({
     onSubmit(formData as Account);
   };
 
+  const toggleAutoNTHash = () => {
+    setAutoNTHash(!autoNTHash);
+
+    // If turning auto-hash on, immediately calculate hash from current password
+    if (!autoNTHash && formData.password) {
+      const ntHash = calculateNTHash(formData.password);
+      setFormData((prev) => ({
+        ...prev,
+        ntlmHash: ntHash,
+      }));
+    }
+  };
+
   return (
     <div className="space-y-4">
       <AccountTypeToggle
@@ -102,13 +133,28 @@ const AccountForm: React.FC<AccountFormProps> = ({
         className="border p-2 mb-4 w-full text-black"
       />
 
-      <Input
-        type="text"
-        value={formData.ntlmHash}
-        onChange={(e) => handleChange("ntlmHash", e.target.value)}
-        placeholder="NTLM Hash"
-        className="border p-2 mb-4 w-full text-black"
-      />
+      <div className="relative">
+        <Input
+          type="text"
+          value={formData.ntlmHash}
+          onChange={(e) => handleChange("ntlmHash", e.target.value)}
+          placeholder="NTLM Hash"
+          className={`border p-2 mb-4 w-full text-black ${autoNTHash ? "bg-gray-100" : ""}`}
+          disabled={autoNTHash}
+        />
+        <div className="flex items-center mt-1 mb-4">
+          <input
+            type="checkbox"
+            id="autoNTHash"
+            checked={autoNTHash}
+            onChange={toggleAutoNTHash}
+            className="mr-2"
+          />
+          <label htmlFor="autoNTHash" className="text-sm text-gray-600">
+            Auto-generate NT hash from password
+          </label>
+        </div>
+      </div>
 
       <div className="mb-4">
         <h3 className="text-lg mb-2">Tags</h3>
