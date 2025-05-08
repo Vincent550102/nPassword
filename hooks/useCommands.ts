@@ -54,7 +54,7 @@ export const useCommands = ({
   }, []);
 
   const sanitizeValue = useCallback((value: string): string => {
-    return value.replace(/'/g, "\\'");
+    return value.replace(/'/g, `'"'"'`);
   }, []);
 
   const getFilteredCommands = useCallback((): CommandWithText[] => {
