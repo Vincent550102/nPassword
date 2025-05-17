@@ -21,6 +21,16 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "impacket-dcomexec '{domain}'/'{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
+    template:
+      "impacket-atexec '{domain}'/'{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
+    template:
       "impacket-smbclient '{domain}'/'{username}':'{password}'@'{targetHost}'",
     authType: "password",
   },
@@ -31,7 +41,62 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "nxc smb '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc ssh '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc ldap '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc ftp '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc wmi '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc winrm '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc rdp '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc vnc '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc mssql '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc nfs '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
       "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /drive:.,linux /bpp:8 /compression -themes -wallpaper /clipboard /audio-mode:0 /auto-reconnect -glyph-cache",
+    authType: "password",
+  },
+  {
+    template:
+      "bloodhound-python -d '{domain}' -ns '{targetHost}' -u '{username}' -p '{password}' --dns-tcp",
     authType: "password",
   },
   {
@@ -70,6 +135,16 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "impacket-dcomexec '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "impacket-atexec '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
       "impacket-smbclient '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
@@ -78,6 +153,56 @@ const domainCommands: Command[] = [
       "impacket-mssqlclient '{domain}'/'{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
+ {
+    template:
+      "nxc smb '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc ssh '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc ldap '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc ftp '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc wmi '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc winrm '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc rdp '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc vnc '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc mssql '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
+  {
+    template:
+      "nxc nfs '{domain}' -u '{username}' -H '{ntlmHash}'",
+    authType: "password",
+  },
   {
     template:
       "xfreerdp /u:'{username}' /d:'{domain}' /pth:'{ntlmHash}' /v:'{targetHost}' /cert-ignore /dynamic-resolution",
@@ -85,6 +210,10 @@ const domainCommands: Command[] = [
   },
   {
     template: "evil-winrm -u '{username}' -H '{ntlmHash}' -i '{targetHost}'",
+    authType: "ntlmHash",
+  },
+  {
+    template: "bloodhound-python -d '{domain}' -ns '{targetHost}' -u '{username}' --hashes '{ntlmHash}' --dns-tcp",
     authType: "ntlmHash",
   },
   {

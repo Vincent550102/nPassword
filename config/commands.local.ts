@@ -25,6 +25,14 @@ const localCommands: Command[] = [
     authType: "password",
   },
   {
+    template: "impacket-dcomexec '{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
+    template: "impacket-atexec '{username}':'{password}'@'{targetHost}'",
+    authType: "password",
+  },
+  {
     template:
       "xfreerdp /u:'{username}' /p:'{password}' /v:'{targetHost}' /cert-ignore /dynamic-resolution /drive:.,linux /bpp:8 /compression -themes -wallpaper /clipboard /audio-mode:0 /auto-reconnect -glyph-cache",
     authType: "password",
@@ -50,6 +58,16 @@ const localCommands: Command[] = [
   {
     template:
       "impacket-smbexec '{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "impacket-dcomexec '{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "impacket-atexec '{username}'@'{targetHost}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
