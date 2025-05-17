@@ -41,52 +41,52 @@ const domainCommands: Command[] = [
   },
   {
     template:
-      "nxc smb '{domain}' -u '{username}' -p '{password}'",
+      "nxc smb '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc ssh '{domain}' -u '{username}' -p '{password}'",
+      "nxc ssh '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc ldap '{domain}' -u '{username}' -p '{password}'",
+      "nxc ldap '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc ftp '{domain}' -u '{username}' -p '{password}'",
+      "nxc ftp '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc wmi '{domain}' -u '{username}' -p '{password}'",
+      "nxc wmi '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc winrm '{domain}' -u '{username}' -p '{password}'",
+      "nxc winrm '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc rdp '{domain}' -u '{username}' -p '{password}'",
+      "nxc rdp '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc vnc '{domain}' -u '{username}' -p '{password}'",
+      "nxc vnc '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc mssql '{domain}' -u '{username}' -p '{password}'",
+      "nxc mssql '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
     template:
-      "nxc nfs '{domain}' -u '{username}' -p '{password}'",
+      "nxc nfs '{targetHost}' -u '{username}' -p '{password}'",
     authType: "password",
   },
   {
@@ -160,52 +160,52 @@ const domainCommands: Command[] = [
   },
  {
     template:
-      "nxc smb '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc smb '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc ssh '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc ssh '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc ldap '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc ldap '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc ftp '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc ftp '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc wmi '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc wmi '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc winrm '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc winrm '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc rdp '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc rdp '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc vnc '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc vnc '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc mssql '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc mssql '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
     template:
-      "nxc nfs '{domain}' -u '{username}' -H '{ntlmHash}'",
+      "nxc nfs '{targetHost}' -u '{username}' -H '{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
