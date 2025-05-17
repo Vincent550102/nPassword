@@ -156,42 +156,42 @@ const domainCommands: Command[] = [
  {
     template:
       "nxc smb '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
       "nxc ssh '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
       "nxc ldap '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
       "nxc ftp '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
       "nxc wmi '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
       "nxc winrm '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
       "nxc rdp '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
       "nxc vnc '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
