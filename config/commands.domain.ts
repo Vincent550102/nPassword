@@ -196,12 +196,12 @@ const domainCommands: Command[] = [
   {
     template:
       "nxc mssql '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
       "nxc nfs '{domain}' -u '{username}' -H '{ntlmHash}'",
-    authType: "password",
+    authType: "ntlmHash",
   },
   {
     template:
