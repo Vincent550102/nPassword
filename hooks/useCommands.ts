@@ -86,8 +86,9 @@ export const useCommands = ({
 
         commandText = commandText
           .replace(/\{username\}/g, username)
-          .replace(/\{domain\}/g, domain)
-          .replace(/\{targetHost\}/g, host);
+          .replace(/\{domain\}/g, domain);
+        if (host)
+          commandText = commandText.replace(/\{targetHost\}/g, host);
 
         if (hasPassword && selectedAccount.password) {
           const password = sanitizeValue(selectedAccount.password);
