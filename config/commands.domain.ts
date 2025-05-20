@@ -96,7 +96,7 @@ const domainCommands: Command[] = [
   },
   {
     template:
-      "bloodhound-python -d '{domain}' -ns '{targetHost}' -u '{username}' -p '{password}' --dns-tcp",
+      "bloodhound-python -d '{domain}' -ns '{targetHost}' -u '{username}' -p '{password}' -c all",
     authType: "password",
   },
   {
@@ -218,7 +218,7 @@ const domainCommands: Command[] = [
     authType: "ntlmHash",
   },
   {
-    template: "bloodhound-python -d '{domain}' -ns '{targetHost}' -u '{username}' --hashes '{ntlmHash}' --dns-tcp",
+    template: "bloodhound-python -d '{domain}' -ns '{targetHost}' -u '{username}' --hashes '{ntlmHash}' -c all",
     authType: "ntlmHash",
   },
   {
