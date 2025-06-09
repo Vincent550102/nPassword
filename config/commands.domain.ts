@@ -91,6 +91,16 @@ const domainCommands: Command[] = [
   },
   {
     template:
+      "certipy find -u '{username}@{domain}' -p '{password}' -dc-ip '{targetHost}'",
+    authType: "password",
+  },
+  {
+    template:
+      "bloodyAD --host '{targetHost}' -d '{domain}' -u '{username}' -p '{password}'",
+    authType: "password",
+  },
+  {
+    template:
       "xfreerdp /u:'{username}' /d:'{domain}' /p:'{password}' /v:'{targetHost}' /drive:.,linux /bpp:8 /compression -themes -wallpaper /clipboard /audio-mode:0 /auto-reconnect -glyph-cache",
     authType: "password",
   },
@@ -206,6 +216,16 @@ const domainCommands: Command[] = [
   {
     template:
       "nxc nfs '{targetHost}' -u '{username}' -H '{ntlmHash}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "certipy find -u '{username}@{domain}' -hashes '00:{ntlmHash}' -dc-ip '{targetHost}'",
+    authType: "ntlmHash",
+  },
+  {
+    template:
+      "bloodyAD --host '{targetHost}' -d '{domain}' -u '{username}' -p '00:{ntlmHash}'",
     authType: "ntlmHash",
   },
   {
