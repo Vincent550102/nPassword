@@ -1,18 +1,66 @@
-import React, { useState, useEffect } from "react";
-import AccountTypeToggle from "@/components/AccountTypeToggle";
+"use client";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Account } from "@/types";
 import Input from "@/components/ui/Input";
 import { calculateNTHash } from "@/utils/hashUtils";
 
-interface AccountFormProps {
-  initialData: {
-    username: string;
-    password: string;
-    ntlmHash: string;
-    tags: string[];
-    type: "local" | "domain";
-    host: string;
+// AccountTypeToggle component
+interface AccountTypeToggleProps {
+  onChange: (accountType: "local" | "domain") => void;
+  initialType: "local" | "domain";
+}
+
+const AccountTypeToggle: React.FC<AccountTypeToggleProps> = ({
+  onChange,
+  initialType = "domain",
+}) => {
+  const [selected, setSelected] = useState<"local" | "domain">(initialType);
+
+  const handleToggle = (accountType: "local" | "domain") => {
+    setSelected(accountType);
+    onChange(accountType);
   };
+
+  useEffect(() => {
+    if (initialType !== selected) {
+      onChange(initialType);
+    }
+  }, [initialType, onChange, selected]);
+
+  return (
+    <div className="flex justify-center my-4">
+      <button
+        className={`px-4 py-2 rounded-r ${
+          selected === "domain" ? "bg-blue-500 text-white" : "bg-gray-200"
+        }`}
+        onClick={() => handleToggle("domain")}
+      >
+        Domain Account
+      </button>
+      <button
+        className={`px-4 py-2 rounded-l ${
+          selected === "local" ? "bg-blue-500 text-white" : "bg-gray-200"
+        }`}
+        onClick={() => handleToggle("local")}
+      >
+        Local Account
+      </button>
+    </div>
+  );
+};
+
+// Form data interface that matches the required form fields
+interface AccountFormData {
+  username: string;
+  password: string;
+  ntlmHash: string;
+  tags: string[];
+  type: "local" | "domain";
+  host: string;
+}
+
+interface AccountFormProps {
+  initialData: AccountFormData;
   onSubmit: (account: Account) => void;
   onCancel: () => void;
   submitLabel: string;
@@ -26,10 +74,12 @@ const AccountForm: React.FC<AccountFormProps> = ({
   submitLabel,
   error,
 }) => {
-  const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState<AccountFormData>(initialData);
   const [newTag, setNewTag] = useState("");
   const [isTagInputVisible, setIsTagInputVisible] = useState(false);
   const [autoNTHash, setAutoNTHash] = useState(initialData.ntlmHash === "");
+  const formRef = useRef<HTMLDivElement>(null);
+  const tagInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-generate NT hash when password changes
   useEffect(() => {
@@ -42,7 +92,61 @@ const AccountForm: React.FC<AccountFormProps> = ({
     }
   }, [formData.password, autoNTHash]);
 
-  const handleChange = (field: string, value: string) => {
+  // Define handleSubmit using useCallback to avoid unnecessary re-renders
+  const handleSubmit = useCallback(() => {
+    if (
+      formData.username.trim() === "" ||
+      (formData.password.trim() === "" && formData.ntlmHash.trim() === "")
+    )
+      return;
+
+    // Convert from form data to Account
+    const account: Account = {
+      username: formData.username,
+      type: formData.type,
+      // Only include non-empty values
+      ...(formData.password ? { password: formData.password } : {}),
+      ...(formData.ntlmHash ? { ntlmHash: formData.ntlmHash } : {}),
+      ...(formData.tags.length > 0 ? { tags: formData.tags } : {}),
+      ...(formData.host ? { host: formData.host } : {}),
+    };
+
+    onSubmit(account);
+  }, [formData, onSubmit]);
+
+  // Add Enter key handler for form submission
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle Enter key
+      if (e.key !== "Enter") return;
+
+      // Skip if Enter is pressed in the tag input (which has its own Enter handler)
+      if (isTagInputVisible && document.activeElement === tagInputRef.current) {
+        return;
+      }
+
+      // Skip if Enter is pressed in a textarea or button
+      if (
+        document.activeElement instanceof HTMLTextAreaElement ||
+        document.activeElement instanceof HTMLButtonElement
+      ) {
+        return;
+      }
+
+      // If we're in any form field, submit the form
+      if (formRef.current?.contains(document.activeElement)) {
+        e.preventDefault();
+        handleSubmit();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isTagInputVisible, handleSubmit]); // Added handleSubmit to the dependency array
+
+  const handleChange = (field: keyof AccountFormData, value: string) => {
     // If manually editing the NT hash, disable auto-generation
     if (field === "ntlmHash" && autoNTHash) {
       setAutoNTHash(false);
@@ -73,18 +177,9 @@ const AccountForm: React.FC<AccountFormProps> = ({
 
   const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      e.preventDefault(); // Prevent form submission
       handleAddTag();
     }
-  };
-
-  const handleSubmit = () => {
-    if (
-      formData.username.trim() === "" ||
-      (formData.password.trim() === "" && formData.ntlmHash.trim() === "")
-    )
-      return;
-
-    onSubmit(formData as Account);
   };
 
   const toggleAutoNTHash = () => {
@@ -101,9 +196,9 @@ const AccountForm: React.FC<AccountFormProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" ref={formRef}>
       <AccountTypeToggle
-        onChange={(type) => handleChange("type", type)}
+        onChange={(type: "local" | "domain") => handleChange("type", type)}
         initialType={formData.type}
       />
 
@@ -177,11 +272,13 @@ const AccountForm: React.FC<AccountFormProps> = ({
               placeholder="New tag"
               className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
               autoFocus
+              ref={tagInputRef}
             />
           ) : (
             <button
               onClick={() => setIsTagInputVisible(true)}
               className="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+              type="button"
             >
               + Add Tag
             </button>
@@ -192,12 +289,17 @@ const AccountForm: React.FC<AccountFormProps> = ({
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <div className="flex justify-end space-x-2">
-        <button onClick={onCancel} className="bg-gray-500 text-white p-2 mr-2">
+        <button
+          onClick={onCancel}
+          className="bg-gray-500 text-white p-2 mr-2"
+          type="button"
+        >
           Cancel
         </button>
         <button
           onClick={handleSubmit}
           className="bg-blue-500 text-white p-2 w-32"
+          type="button"
         >
           {submitLabel}
         </button>

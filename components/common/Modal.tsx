@@ -1,18 +1,25 @@
-import { ReactNode, useRef, useEffect, useState, useCallback } from "react";
+"use client";
+import React, {
+  ReactNode,
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 
 interface ModalProps {
   children: ReactNode;
-  onClose: () => void;
+  onCloseAction: () => void; // Renamed from onClose to onCloseAction
 }
 
-export default function Modal({ children, onClose }: ModalProps) {
+export default function Modal({ children, onCloseAction }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   const handleClose = useCallback(() => {
     setIsVisible(false);
-    setTimeout(onClose, 300);
-  }, [onClose]);
+    setTimeout(onCloseAction, 300);
+  }, [onCloseAction]);
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -36,14 +43,11 @@ export default function Modal({ children, onClose }: ModalProps) {
   );
 
   useEffect(() => {
-    // Make sure the modal is visible after it's mounted
     const timer = setTimeout(() => setIsVisible(true), 10);
 
-    // Add event listeners for accessibility
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleKeyDown);
 
-    // Disable body scrolling
     document.body.style.overflow = "hidden";
 
     return () => {

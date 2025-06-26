@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { DomainProvider } from "@/context/DomainContext";
 import Head from "next/head";
 
 const geistSans = Geist({
@@ -33,9 +32,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <DomainProvider>
-          <div className="container mx-auto md:p-4">{children}</div>
-        </DomainProvider>
+        <div className="min-h-screen">{children}</div>
       </body>
     </html>
   );
