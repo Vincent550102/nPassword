@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect, useCallback } from "react";
 
 interface AccountTypeToggleProps {
@@ -19,11 +20,12 @@ const AccountTypeToggle: React.FC<AccountTypeToggleProps> = ({
     [onChange],
   );
 
+  // Fix the useEffect dependency array
   useEffect(() => {
     if (initialType !== selected) {
       onChange(initialType);
     }
-  }, []);
+  }, [initialType, onChange, selected]); // Added missing dependencies
 
   return (
     <div className="flex justify-center my-4">

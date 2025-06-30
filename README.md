@@ -1,6 +1,7 @@
 # nPassword
 
-<img width="931" src="https://github.com/user-attachments/assets/c06fec58-9ba2-4b7d-812c-3d18b8d104da" />
+<img width="1341" alt="image" src="https://github.com/user-attachments/assets/d394a0c2-6bc1-4d01-bef6-a6ce3199b319" />
+
 
 <p align="center">
   A lightweight password manager for Windows Active Directory.

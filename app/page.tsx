@@ -1,14 +1,15 @@
 "use client";
-import DomainInitializer from "@/components/DomainInitializer";
-import NavBar from "@/components/NavBar";
+import { StoreProvider } from "@/context/StoreContext";
+import DomainManager from "@/components/domain/DomainManager";
 
+/**
+ * Main application page
+ * Wraps the entire application with the StoreProvider for state management
+ */
 export default function Home() {
   return (
-    <div>
-      <NavBar />
-      <div className="min-h-screen pt-16">
-        <DomainInitializer />
-      </div>
-    </div>
+    <StoreProvider>
+      <DomainManager />
+    </StoreProvider>
   );
 }
