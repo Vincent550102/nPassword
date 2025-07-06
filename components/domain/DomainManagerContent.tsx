@@ -76,7 +76,7 @@ const DomainManagerContent: React.FC<DomainManagerContentProps> = ({
           </aside>
 
           {/* Main content area */}
-          <main className="flex-1 overflow-auto p-3 bg-gray-50">
+          <main className="flex-1 overflow-auto p-0 bg-gray-50">
             {selectedAccount ? (
               <div className="max-w-4xl mx-auto">
                 <div className="bg-white rounded-lg shadow-sm p-3 mb-3">
