@@ -57,6 +57,16 @@ export const useCommands = ({
     return value.replace(/'/g, `'"'"'`);
   }, []);
 
+  // Helper: replace all placeholders (e.g. {username}) in one pass using a callback.
+  const replacePlaceholders = (
+    template: string,
+    map: Record<string, string>,
+  ): string => {
+    return template.replace(/\{(\w+)\}/g, (_match, key) => {
+      return key in map ? map[key] : _match; 
+    });
+  };
+
   const getFilteredCommands = useCallback((): CommandWithText[] => {
     if (!selectedAccount || !selectedDomain) return [];
 
@@ -77,26 +87,22 @@ export const useCommands = ({
           return null;
         }
 
-        let commandText = command.template;
+        const replacements: Record<string, string> = {
+          username: sanitizeValue(selectedAccount.username),
+          domain: sanitizeValue(selectedDomain.name),
+        };
 
-        // Safely substitute values
-        const username = sanitizeValue(selectedAccount.username);
-        const domain = sanitizeValue(selectedDomain.name);
-        const host = sanitizeValue(targetHost);
-
-        commandText = commandText
-          .replace(/\{username\}/g, username)
-          .replace(/\{domain\}/g, domain);
-        if (host)
-          commandText = commandText.replace(/\{targetHost\}/g, host);
+        if (targetHost) {
+          replacements["targetHost"] = sanitizeValue(targetHost);
+        }
 
         if (hasPassword && selectedAccount.password) {
-          const password = sanitizeValue(selectedAccount.password);
-          commandText = commandText.replace(/\{password\}/g, password);
+          replacements["password"] = sanitizeValue(selectedAccount.password);
         } else if (hasNtlmHash && selectedAccount.ntlmHash) {
-          const ntlmHash = sanitizeValue(selectedAccount.ntlmHash);
-          commandText = commandText.replace(/\{ntlmHash\}/g, ntlmHash);
+          replacements["ntlmHash"] = sanitizeValue(selectedAccount.ntlmHash);
         }
+
+        const commandText = replacePlaceholders(command.template, replacements);
 
         return { command, commandText };
       })
