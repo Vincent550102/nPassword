@@ -7,7 +7,10 @@
   A lightweight password manager for Windows Active Directory.
 </p>
 
+> [!NOTE] 
 > nPassword is a pure front-end application. All data is stored in your browser's local storage and can be deployed as a static site (for example on GitHub Pages).
+
+> [!WARNING] 
 > This project is for research and educational use only. The author assumes no responsibility for any misuse.
 
 ## Features
