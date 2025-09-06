@@ -60,9 +60,11 @@ https://github.com/user-attachments/assets/1f991b95-a011-4e35-b784-92eec4a3ed11
     },
     {
       "username": "Bob",
-      "password": "",
-      "ntlmHash": "00000000000000000000000000000000:7ECFFFF0C3548187607A14BAD0F88BB1",
-      "tags": ["domain admin"],
+      "password": "qwer!",
+      "ntlmHash": "",
+      "tags": [
+        "domain admin"
+      ],
       "type": "domain",
       "host": ""
     },
@@ -71,6 +73,34 @@ https://github.com/user-attachments/assets/1f991b95-a011-4e35-b784-92eec4a3ed11
       "password": "1qaz@WSX",
       "ntlmHash": "",
       "tags": [],
+      "type": "domain",
+      "host": ""
+    },
+    {
+      "username": "David",
+      "password": "",
+      "ntlmHash": "00000000000000000000000000000000:7ECFFFF0C3548187607A14BAD0F88BB1",
+      "tags": [],
+      "type": "domain",
+      "host": ""
+    },
+    {
+      "username": "Eli",
+      "password": "",
+      "ntlmHash": "00000000000000000000000000000000:7ECFFFF0C3548187607A14BAD0F88BB0",
+      "tags": [
+        "as-rep"
+      ],
+      "type": "domain",
+      "host": ""
+    },
+    {
+      "username": "Fox",
+      "password": "qwer12434~",
+      "ntlmHash": "",
+      "tags": [
+        "mssql"
+      ],
       "type": "domain",
       "host": ""
     }
