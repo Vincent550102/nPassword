@@ -30,4 +30,4 @@ jobs:
           publish_dir: ./dist
           publish_branch: gh-pages
           force_orphan: true
-          cname: pw.pornhub.mov
+          cname: npassword.app
