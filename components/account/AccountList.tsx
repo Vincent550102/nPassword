@@ -178,8 +178,8 @@ const AccountList: React.FC<AccountListProps> = ({ className = "" }) => {
       tabIndex={0} // Make the list focusable for keyboard navigation
     >
       {/* Header section */}
-      <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-white">
-        <h2 className="font-semibold text-gray-800 text-lg">
+      <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-white gap-2">
+        <h2 className="font-semibold text-gray-800 text-lg truncate min-w-0">
           {selectedDomain.name}
         </h2>
         <button
@@ -187,7 +187,7 @@ const AccountList: React.FC<AccountListProps> = ({ className = "" }) => {
             setIsModalOpen(true);
             setError("");
           }}
-          className="w-8 h-8 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-full flex items-center justify-center transition-colors duration-200"
+          className="w-8 h-8 flex-shrink-0 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-full flex items-center justify-center transition-colors duration-200"
           aria-label="Add new account"
           title="Add new account"
         >
